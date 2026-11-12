@@ -22,6 +22,12 @@ Gioca: https://g95g95.github.io/unione-fa-la-cocchia/
 14. tartaruga
 15. Cocchia d'oro
 
+## Come si gioca
+
+- All'inizio cadono solo pistacchi. Poi cade fino alla cocchia subito sotto la più grossa che hai creato, e dalla noce in su resta sempre più indietro.
+- Parti con 2 scosse, senza limite massimo.
+- La prima volta che crei una cocchia dalla nocciola (livello 3) alla tartaruga (livello 14) esce un gratta e vinci "Cocchie d'oro": gratti 6 caselle e con 3 cocchie uguali guadagni una scossa. La probabilità parte da 0,33 e sale di 0,05 a ogni biglietto.
+
 ## Com'è fatto
 
 Un solo file, `index.html`: nessuna installazione e nessun server. Record e partita in corso restano nel browser di chi gioca.
