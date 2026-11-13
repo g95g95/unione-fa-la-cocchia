@@ -1,6 +1,6 @@
 # L'unione fa la cocchia
 
-Gioco da browser: fai cadere le cocchie (i gusci, in ascolano) nel barattolo. Due cocchie uguali che si toccano si fondono in quella più grossa. Si vince arrivando alla Cocchia d'oro, si perde se il barattolo si riempie.
+Gioco da browser: fai cadere le cocchie (i gusci, in ascolano) nel cocchiodromo. Due cocchie uguali che si toccano si fondono in quella più grossa. Si vince arrivando alla Cocchia d'oro, si perde se il cocchiodromo si riempie.
 
 Gioca: https://g95g95.github.io/unione-fa-la-cocchia/
 
