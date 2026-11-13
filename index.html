@@ -62,15 +62,27 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .card .reach canvas{width:48px;height:48px;flex:none}
 .card .row{display:flex;gap:8px}
 .card button{flex:1}
+.ovl.full{position:fixed;z-index:15}
+.ovl.full .card{width:min(344px,100%);max-height:100%;overflow:auto}
+#lvGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px 7px;margin:12px 0 4px}
+.card .lvc{position:relative;display:block;min-height:0;padding:0 0 3px;background:none;border-radius:8px;color:#1c2410;font:800 13px/1 var(--display)}
+.lvc canvas{display:block;width:100%;border-radius:0 0 5px 5px;box-shadow:0 0 0 2px #1c2410}
+.lvc span{display:block;margin-top:6px}
+.lvc .tro{display:none;position:absolute;right:-4px;top:-5px;width:26px;height:26px;box-shadow:none;border-radius:0;filter:drop-shadow(0 1px 1px rgba(0,0,0,.45))}
+.lvc.done .tro{display:block}
+.lvc.lock{opacity:.38}
+.lvc.cur span{color:#a3601a}
+.lvc.sel canvas:first-child{box-shadow:0 0 0 2px #1c2410,0 0 0 5px var(--yolk)}
 
 .ladder{display:flex;align-items:center;justify-content:space-between;gap:2px;padding:0 2px}
 .ladder canvas{width:clamp(14px,4.7vw,22px);height:clamp(14px,4.7vw,22px);opacity:.28;transition:opacity .3s}
 .ladder canvas.seen{opacity:1}
 .ladder i{flex:1;height:2px;background:var(--olive-soft);border-radius:2px;min-width:2px}
 
-.controls{display:flex;gap:8px}
+.controls{display:flex;gap:5px}
+.controls button{font-size:13px;padding:0 3px;min-width:0}
 button{font:700 14px/1 var(--body);color:var(--trav);background:var(--olive-soft);border:0;border-radius:12px;
-  min-height:46px;padding:0 8px;cursor:pointer;flex:1;touch-action:manipulation}
+  min-height:46px;padding:0 5px;cursor:pointer;flex:1;touch-action:manipulation;white-space:nowrap}
 button:active{transform:translateY(1px)}
 button:focus-visible{outline:3px solid var(--yolk);outline-offset:2px}
 button:disabled{opacity:.4;cursor:default}
@@ -121,7 +133,7 @@ button.primary{background:var(--yolk);color:#1c2410}
     <div id="legend" class="ovl" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
       <div class="card">
         <h2 id="legendTitle">Le cocchie</h2>
-        <p>Unisci due tartarughe, fai la Cocchia d'oro e hai vinto. Ogni cocchia nuova dalla nocciola in su ti regala uno scocchia e vinci: con tre uguali guadagni una scossa.</p>
+        <p>Unisci due tartarughe, fai la Cocchia d'oro e hai vinto il livello. Ogni cocchia nuova dalla nocciola in su ti regala uno scocchia e vinci: con tre uguali guadagni una scossa.</p>
         <ol id="legendList"></ol>
         <div class="row"><button id="legendClose" type="button" class="primary">Torna a giocare</button></div>
       </div>
@@ -134,7 +146,18 @@ button.primary{background:var(--yolk);color:#1c2410}
     <button id="shake" type="button">Scossa <b id="shakeN">2</b></button>
     <button id="sound" type="button">Audio sì</button>
     <button id="list" type="button">Cocchie</button>
+    <button id="lvl" type="button">Livelli</button>
     <button id="restart" type="button">Nuova</button>
+  </div>
+</div>
+
+<div id="levels" class="ovl full" role="dialog" aria-modal="true" aria-labelledby="levelsTitle">
+  <div class="card">
+    <h2 id="levelsTitle">I cocchiodromi</h2>
+    <p>Fai la Cocchia d'oro per vincere la cocchia del livello e aprire quello dopo.</p>
+    <div id="lvGrid"></div>
+    <div class="reach"><canvas id="lvIcon" width="96" height="96"></canvas><p id="lvInfo"></p></div>
+    <div class="row"><button id="lvClose" type="button">Chiudi</button><button id="lvGo" type="button" class="primary">Gioca</button></div>
   </div>
 </div>
 
@@ -162,6 +185,49 @@ var ART=["il pistacchio","l'arachide","la nocciola","la mandorla","la castagna",
 var TOP=RAD.length-1;
 var KEY="cocchia-merge-v1",SV=3;
 var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+var openAll=/[?&]sblocca\b/.test(location.search);
+
+/* ---------- livelli: 20 cocchiodromi ----------
+   Ogni forma e' il contorno interno, dalla parete sinistra al fondo alla parete destra; la bocca resta sempre larga uguale.
+   Dall'1 al 17 ogni livello toglie l'1% di spazio sotto la linea; dal 18 al 20 lo spazio torna largo ma arrivano gli ostacoli (o), in senso orario.
+   L'ordine viene da un giocatore automatico: 120 partite per forma, con la stessa strategia, e i punti medi che scendono da un livello all'altro. */
+var PI=Math.PI;
+function arcP(cx,cy,rx,ry,a0,a1,n){var o=[];for(var i=0;i<=n;i++){var a=a0+(a1-a0)*i/n;o.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry]);}return o;}
+function ngon(cx,cy,r,n){return arcP(cx,cy,r,r,-PI/2,-PI/2+TAU*(n-1)/n,n-1);}
+function scal(x0,y0,x1,y1,n,sag){var o=[],dx=(x1-x0)/n,dy=(y1-y0)/n,l=Math.sqrt(dx*dx+dy*dy),nx=dy/l,ny=-dx/l;
+  for(var i=0;i<n;i++)for(var k=i?1:0;k<=6;k++){var t=k/6,b=4*t*(1-t)*sag;o.push([x0+dx*(i+t)+nx*b,y0+dy*(i+t)+ny*b]);}return o;}
+/* le forme: ognuna ha una misura p (in punti del campo) che decide quanto spazio toglie.
+   Le tre con i cunei sulle pareti (profondi q) sono le piu' dure a parita' di spazio: li' p alza solo il fondo a V, per far tornare lo spazio del livello. */
+var SH={
+ Classico:function(){return[[0,H],[W,H]];},
+ Smussato:function(p){return[[0,H-p],[p,H],[W-p,H],[W,H-p]];},
+ Tinozza:function(p){return arcP(p,H-p,p,p,PI,PI/2,10).concat(arcP(W-p,H-p,p,p,PI/2,0,10));},
+ Conca:function(p){return[[0,H-p],[W/2,H],[W,H-p]];},
+ Scivolo:function(p){return[[0,H-p],[W,H]];},
+ Imbuto:function(p){return[[0,300],[p,H],[W-p,H],[W,300]];},
+ Gradino:function(p){return[[0,H],[240,H],[240,H-p],[W,H-p]];},
+ Dente:function(p,q){return[[0,H-p],[W/2,H],[W,H-p],[W,470],[W-q,380],[W-q,320],[W,230]];},
+ Scalinata:function(p){return[[0,H],[100,H],[100,H-p],[200,H-p],[200,H-2*p],[300,H-2*p],[300,H-3*p],[W,H-3*p]];},
+ Clessidra:function(p,q){return[[0,220],[q,340],[0,460],[0,H-p],[W/2,H],[W,H-p],[W,460],[W-q,340],[W,220]];},
+ Dosso:function(p){return[[0,H]].concat(arcP(200,H,120,p,PI,TAU,16),[[W,H]]);},
+ Emme:function(p){return[[0,H-p],[100,H],[200,H-p],[300,H],[W,H-p]];},
+ Serpentina:function(p,q){return[[0,120],[q,215],[0,310],[0,H-p],[W/2,H],[W,H-p],[W,435],[W-q,340],[W,245]];},
+ Sega:function(p){return[[0,H],[133,H-p],[133,H],[267,H-p],[267,H],[W,H-p]];},
+ Pozzo:function(p){return[[0,H-p],[135,H-p],[135,H],[265,H],[265,H-p],[W,H-p]];},
+ Pettine:function(p){return[[0,H-p],[70,H-p],[70,H],[160,H],[160,H-p],[240,H-p],[240,H],[330,H],[330,H-p],[W,H-p]];},
+ Cocchia:function(p){return scal(0,H-p,145,H,3,13).concat(scal(255,H,W,H-p,3,13));}
+};
+var LV=[
+ {n:"Classico",p:0},{n:"Smussato",p:41},{n:"Tinozza",p:87.1},{n:"Scivolo",p:24.8},{n:"Emme",p:33.3},{n:"Imbuto",p:37.3},{n:"Conca",p:49.6},{n:"Scalinata",p:19.3},{n:"Gradino",p:82.8},
+ {n:"Dosso",p:79.6},{n:"Pozzo",p:61.3},{n:"Dente",p:38.5,q:70},{n:"Cocchia",p:115.5},{n:"Clessidra",p:50.1,q:48},{n:"Sega",p:115.9},{n:"Pettine",p:112.5},{n:"Serpentina",p:75.5,q:60},
+ {n:"Flipper",s:"Conca",p:40,o:function(){return[ngon(100,220,15,14),ngon(300,220,15,14),ngon(200,290,15,14)];}},
+ {n:"Mensole",s:"Smussato",p:40,o:function(){return[[[-6,250],[106,250],[106,264],[-6,264]],[[294,250],[406,250],[406,264],[294,264]]];}},
+ {n:"Buco nero",s:"Tinozza",p:135,dark:true,o:function(){return[ngon(200,250,58,26)];}}
+];
+function shapeOf(L){return SH[L.s||L.n](L.p,L.q);}
+var PRIZE=["perla","corallo","bronzo","argento","oro","Dark Matter"];
+var TROPHY=[["#fdf6f0","#cdb4cf"],["#ff9a7d","#c23f2e"],["#dba066","#7a4a1f"],["#f1f4f7","#8b96a1"],["#ffe27d","#c68a10"],["#7a52cf","#0a0614"]];
+function rewName(n){return"Cocchia "+(n<=14?NAMES[n-1]:PRIZE[n-15]);}
 
 /* ---------- disegno delle cocchie ---------- */
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -234,6 +300,43 @@ var score=0,best=0,cur=0,next=1,holdX=W/2,canDrop=true,dropAt=0,time=0;
 var won=false,over=false,overT=0,shakes=2,maxTier=0,combo=0,lastMerge=-9,shakeAmp=0,hint=true,muted=false,idc=1;
 var aiming=false,paused=false,winAt=0,seen=[],tickets=[],tkCount=0,tkAt=0,tkOpen=null;
 
+/* ---------- geometria del livello ---------- */
+var level=1,unlocked=1,done=[],segs=[],playPoly=[],obst=[],bgDirty=true,hnx=0,hny=0;
+function addPoly(pts,closed){
+  var n=pts.length,m=closed?n:n-1,i,list=[];
+  for(i=0;i<m;i++){var a=pts[i],b=pts[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.sqrt(dx*dx+dy*dy);if(len<.01)continue;
+    list.push({ax:a[0],ay:a[1],bx:b[0],by:b[1],ux:dx/len,uy:dy/len,nx:dy/len,ny:-dx/len,len:len,
+      x0:Math.min(a[0],b[0]),x1:Math.max(a[0],b[0]),y0:Math.min(a[1],b[1]),y1:Math.max(a[1],b[1]),cv:false,vx:0,vy:0});}
+  /* cv: lo spigolo in fondo al segmento sporge dentro il cocchiodromo; vx,vy: direzione del segmento dopo */
+  for(i=0;i<list.length;i++){var s=list[i],q=list[i+1]||(closed?list[0]:null);if(q){s.cv=s.ux*q.uy-s.uy*q.ux>1e-6;s.vx=q.ux;s.vy=q.uy;}segs.push(s);}
+}
+function inPoly(p,x,y){var c=false;for(var i=0,j=p.length-1;i<p.length;j=i++){var a=p[i],b=p[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c;}return c;}
+function inPlay(x,y){if(!inPoly(playPoly,x,y))return false;for(var i=0;i<obst.length;i++)if(inPoly(obst[i],x,y))return false;return true;}
+function setLevel(n){
+  level=Math.max(1,Math.min(LV.length,n|0));var L=LV[level-1],i;
+  playPoly=[[0,-600]].concat(shapeOf(L),[[W,-600]]);obst=L.o?L.o():[];segs=[];
+  addPoly(playPoly,false);for(i=0;i<obst.length;i++)addPoly(obst[i],true);bgDirty=true;
+}
+/* quanto il cerchio b (raggio R) entra nel segmento s; la normale del contatto resta in hnx,hny */
+function segHit(b,s,R){
+  var px=b.x-s.ax,py=b.y-s.ay,t=px*s.ux+py*s.uy;
+  if(t>=0&&t<=s.len){var sd=px*s.nx+py*s.ny;if(sd>=R||sd<-8)return 0;hnx=s.nx;hny=s.ny;return R-sd;}
+  if(t<0||!s.cv)return 0;
+  px=b.x-s.bx;py=b.y-s.by;if(px*s.vx+py*s.vy>=0)return 0;
+  var d2=px*px+py*py;if(d2>=R*R)return 0;var d=Math.sqrt(d2)||1e-4;hnx=px/d;hny=py/d;return R-d;
+}
+function clearAt(x,y,r){if(!inPlay(x,y))return false;var t={x:x,y:y};for(var i=0;i<segs.length;i++)if(segHit(t,segs[i],r)>0)return false;return true;}
+function settle(x,r){var y=LINE_Y+30;while(y<H&&clearAt(x,y+2,r))y+=2;return y;}
+function rayDown(x){var y=H,i,s,yy;for(i=0;i<segs.length;i++){s=segs[i];if(x<s.x0||x>s.x1||s.x1-s.x0<.01)continue;yy=s.ay+(s.by-s.ay)*(x-s.ax)/(s.bx-s.ax);if(yy>HOLD_Y&&yy<y)y=yy;}return y;}
+/* rete di sicurezza: una cocchia finita dentro la pietra torna sul bordo piu' vicino */
+function rescue(){
+  for(var i=0;i<bodies.length;i++){var b=bodies[i];if(b.y<0||inPlay(b.x,b.y))continue;
+    var bd=1e9,bx=b.x,by=b.y,k,s,t,qx,qy,d;
+    for(k=0;k<segs.length;k++){s=segs[k];t=Math.max(0,Math.min(s.len,(b.x-s.ax)*s.ux+(b.y-s.ay)*s.uy));qx=s.ax+s.ux*t;qy=s.ay+s.uy*t;d=(b.x-qx)*(b.x-qx)+(b.y-qy)*(b.y-qy);
+      if(d<bd){bd=d;bx=qx+s.nx*b.r;by=qy+s.ny*b.r;}}
+    b.x=bx;b.y=by;b.vx=b.vy=0;}
+}
+
 function mk(t,x,y){var R=RAD[t],m=R*R/1000;return{id:idc++,t:t,x:x,y:y,vx:0,vy:0,a:0,w:0,r:R,R:R,im:1/m,ii:1/(.5*m*R*R),born:time};}
 /* all'inizio cadono solo pistacchi; poi cade fino alla cocchia sotto la piu' grossa raggiunta, e dalla noce in su resta sempre piu' indietro (massimo la cozza) */
 function hiTier(){return maxTier<=5?Math.max(0,maxTier-1):Math.min(8,4+Math.floor((maxTier-5)/2));}
@@ -242,22 +345,23 @@ function fresh(){
   bodies=[];parts=[];pops=[];rings=[];score=0;time=0;over=false;overT=0;winAt=0;shakes=2;maxTier=0;combo=0;seen=[];tickets=[];tkCount=0;tkOpen=null;lastMerge=-9;canDrop=true;holdX=W/2;
   cur=pick();next=pick();
   var seed=[[0,70],[0,190],[0,300]];
-  for(var i=0;i<seed.length;i++){var b=mk(seed[i][0],seed[i][1],H-RAD[seed[i][0]]);b.born=-5;b.a=i*1.3;bodies.push(b);maxTier=Math.max(maxTier,b.t);}
+  for(var i=0;i<seed.length;i++){var b=mk(seed[i][0],seed[i][1],settle(seed[i][1],RAD[seed[i][0]]));b.born=-5;b.a=i*1.3;bodies.push(b);maxTier=Math.max(maxTier,b.t);}
 }
 function serialize(){
-  return{v:SV,score:score,cur:cur,next:next,shakes:shakes,maxTier:maxTier,over:over,seen:RAD.map(function(r,t){return seen[t]?1:0;}),tk:tickets.slice(0,12),tkc:tkCount,
+  return{v:SV,lv:level,score:score,cur:cur,next:next,shakes:shakes,maxTier:maxTier,over:over,seen:RAD.map(function(r,t){return seen[t]?1:0;}),tk:tickets.slice(0,12),tkc:tkCount,
     bodies:bodies.map(function(b){return[b.t,Math.round(b.x*10)/10,Math.round(b.y*10)/10,Math.round(b.a*100)/100];})};
 }
 function restore(s){
   if(!s||s.v!==SV||!Array.isArray(s.bodies)||s.over)return false;
-  fresh();bodies=[];
+  var lv=s.lv|0||1;if(lv>LV.length||(lv>unlocked&&!openAll))return false;
+  setLevel(lv);fresh();bodies=[];
   for(var i=0;i<s.bodies.length;i++){var q=s.bodies[i];if(!(q[0]>=0&&q[0]<TOP))continue;var b=mk(q[0],+q[1]||W/2,+q[2]||H/2);b.a=+q[3]||0;b.born=-5;bodies.push(b);}
   score=+s.score||0;cur=Math.min(8,Math.max(0,s.cur|0));next=Math.min(8,Math.max(0,s.next|0));shakes=Math.max(0,Math.min(99,s.shakes|0));maxTier=Math.min(TOP-1,Math.max(0,s.maxTier|0));
   if(Array.isArray(s.seen))for(var k=0;k<=TOP;k++)seen[k]=!!s.seen[k];
   if(Array.isArray(s.tk))tickets=s.tk.filter(function(p){return p>0&&p<1;}).slice(0,12);tkCount=Math.max(0,Math.min(12,s.tkc|0));tkAt=.6;
   hint=false;return true;
 }
-function save(){try{localStorage.setItem(KEY,JSON.stringify({best:best,muted:muted,game:over?null:serialize()}));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({best:best,muted:muted,lv:level,unlocked:unlocked,done:done,game:over?null:serialize()}));}catch(e){}}
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){return null;}}
 
 /* ---------- audio e vibrazione ---------- */
@@ -273,16 +377,16 @@ function buzz(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 /* ---------- fisica ---------- */
 var cs=[];
 function step(dt){
-  time+=dt;var i,j,a,b,c,n=bodies.length;
+  time+=dt;var i,j,k,s,a,b,c,n=bodies.length,ns=segs.length;
   for(i=0;i<n;i++){b=bodies[i];b.vy+=G*dt;
     if(b.r<b.R)b.r=Math.min(b.R,b.r+b.R*dt*7);
     var sp=Math.sqrt(b.vx*b.vx+b.vy*b.vy);if(sp>1500){b.vx*=1500/sp;b.vy*=1500/sp;}
     b.w*=.995;if(b.w>25)b.w=25;if(b.w<-25)b.w=-25;}
   cs.length=0;var merge=null;
   for(i=0;i<n;i++){a=bodies[i];
-    if(a.x-a.r<.6)cs.push({a:null,b:a,nx:1,ny:0,jn:0,jt:0,bias:0});
-    if(a.x+a.r>W-.6)cs.push({a:null,b:a,nx:-1,ny:0,jn:0,jt:0,bias:0});
-    if(a.y+a.r>H-.6)cs.push({a:null,b:a,nx:0,ny:-1,jn:0,jt:0,bias:0});
+    var ar=a.r+1;
+    for(k=0;k<ns;k++){s=segs[k];if(a.x+ar<s.x0||a.x-ar>s.x1||a.y+ar<s.y0||a.y-ar>s.y1)continue;
+      if(segHit(a,s,a.r+.6)>0)cs.push({a:null,b:a,nx:hnx,ny:hny,jn:0,jt:0,bias:0,s:s});}
     for(j=i+1;j<n;j++){b=bodies[j];var dx=b.x-a.x,dy=b.y-a.y,rr=a.r+b.r+.6,d2=dx*dx+dy*dy;
       if(d2<rr*rr){
         if(a.t===b.t&&a.t<TOP&&!merge&&a.r>=a.R*.9&&b.r>=b.R*.9){merge=[a,b];continue;}
@@ -306,6 +410,7 @@ function step(dt){
     for(i=0;i<cs.length;i++){c=cs[i];a=c.a;b=c.b;if(!a)continue;
       var ex=b.x-a.x,ey=b.y-a.y,ed=Math.sqrt(ex*ex+ey*ey)||1e-4,pen=a.r+b.r-ed;
       if(pen>.4){var k=(pen-.4)*.45/(a.im+b.im);ex/=ed;ey/=ed;a.x-=ex*k*a.im;a.y-=ey*k*a.im;b.x+=ex*k*b.im;b.y+=ey*k*b.im;}}
+    for(i=0;i<cs.length;i++){c=cs[i];if(c.a)continue;b=c.b;var wp=segHit(b,c.s,b.r);if(wp>0){b.x+=hnx*wp;b.y+=hny*wp;}}
     for(i=0;i<n;i++){b=bodies[i];if(b.x<b.r)b.x=b.r;if(b.x>W-b.r)b.x=W-b.r;if(b.y>H-b.r)b.y=H-b.r;}
   }
   if(merge)doMerge(merge[0],merge[1]);
@@ -341,13 +446,16 @@ function doMerge(a,b){
 function endGame(win){
   if(over)return;over=true;aiming=false;won=!!win;
   var rec=score>best;if(rec)best=score;
+  var more=win&&level<LV.length;
+  if(win){if(done.indexOf(level)<0)done.push(level);if(more&&unlocked<level+1)unlocked=level+1;}
   if(win){blip(523,.18,"triangle",.2);blip(659,.18,"triangle",.2,.14);blip(784,.18,"triangle",.2,.28);blip(1047,.5,"triangle",.22,.42);buzz([30,40,30,40,120]);}
   else{blip(300,.5,"sawtooth",.12);blip(200,.6,"sawtooth",.1,.15);buzz([40,60,80]);}
-  $("overTitle").textContent=win?"Hai fatto la Cocchia d'oro":"Cocchiodromo pieno";
+  $("overTitle").textContent=win?"Hai vinto la "+rewName(level):"Cocchiodromo pieno";
   $("overScore").textContent=score;
-  $("overBest").textContent=(win?"Partita finita, hai vinto. ":"")+(rec?"Nuovo record.":"Il tuo record resta "+best+".");
-  $("overReach").textContent=win?"Hai unito tutte e "+RAD.length+" le cocchie.":"Sei arrivato a "+NAMES[maxTier]+", cocchia "+(maxTier+1)+" di "+RAD.length+".";
-  paintInto($("overIcon"),maxTier);
+  $("overBest").textContent=(win?"Livello "+level+" finito. ":"")+(rec?"Nuovo record.":"Il tuo record resta "+best+".");
+  $("overReach").textContent=win?(more?"Si apre il livello "+(level+1)+", "+LV[level].n+".":"Hai finito tutti e "+LV.length+" i cocchiodromi."):"Sei arrivato a "+NAMES[maxTier]+", cocchia "+(maxTier+1)+" di "+RAD.length+".";
+  if(win)paintTrophy($("overIcon"),level);else paintInto($("overIcon"),maxTier);
+  $("again").textContent=more?"Livello "+(level+1):"Rigioca";
   $("copy").textContent="Copia risultato";
   $("over").classList.add("on");$("best").textContent=best;
   save();setTimeout(function(){try{$("again").focus();}catch(e){}},50);
@@ -386,14 +494,56 @@ $("restart").addEventListener("click",function(){
   var bt=this;if(bt.dataset.arm){clearTimeout(armT);delete bt.dataset.arm;bt.textContent="Nuova";newGame();return;}
   bt.dataset.arm="1";bt.textContent="Sicuro?";armT=setTimeout(function(){delete bt.dataset.arm;bt.textContent="Nuova";},2500);
 });
-$("again").addEventListener("click",newGame);
+$("again").addEventListener("click",function(){if(won&&level<LV.length)setLevel(level+1);newGame();});
 function legend(on){paused=on;$("legend").classList.toggle("on",on);if(on){try{$("legendClose").focus();}catch(e){}}else last=performance.now();}
 $("list").addEventListener("click",function(){if(!over)legend(true);});
 $("legendClose").addEventListener("click",function(){legend(false);});
 $("copy").addEventListener("click",function(){
-  var bt=this,txt="L'unione fa la cocchia: "+score+" punti. "+(won?"Ho fatto la Cocchia d'oro.":"Sono arrivato a "+NAMES[maxTier]+" ("+(maxTier+1)+" di "+RAD.length+").");
+  var bt=this,txt="L'unione fa la cocchia, livello "+level+" ("+LV[level-1].n+"): "+score+" punti. "+(won?"Ho vinto la "+rewName(level)+".":"Sono arrivato a "+NAMES[maxTier]+" ("+(maxTier+1)+" di "+RAD.length+").");
   try{navigator.clipboard.writeText(txt).then(function(){bt.textContent="Copiato";},function(){bt.textContent="Copia non riuscita";});}catch(e){bt.textContent="Copia non riuscita";}
 });
+/* ---------- livelli: scelta e premi ---------- */
+function paintTrophy(cv,n){
+  var g=cv.getContext("2d"),h=cv.width/2,c=n<=14?SHELL[n-1].c:TROPHY[n-15],cy=.5,R=1.12,a0=-PI+.5,a1=-.5,N=6,i,a,am;
+  g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.translate(h,h);g.scale(h-2,h-2);g.lineJoin="round";
+  g.beginPath();g.moveTo(-.2,cy+.32);g.lineTo(.2,cy+.32);g.lineTo(.3,cy+.04);g.lineTo(Math.cos(a1)*R,cy+Math.sin(a1)*R);
+  for(i=N-1;i>=0;i--){a=a0+(a1-a0)*i/N;am=a+(a1-a0)/N/2;g.quadraticCurveTo(Math.cos(am)*R*1.2,cy+Math.sin(am)*R*1.2,Math.cos(a)*R,cy+Math.sin(a)*R);}
+  g.lineTo(-.3,cy+.04);g.closePath();
+  var gr=g.createLinearGradient(-.6,-.8,.6,.9);gr.addColorStop(0,c[0]);gr.addColorStop(1,c[1]);g.fillStyle=gr;g.fill();
+  g.lineWidth=.07;g.strokeStyle="rgba(20,24,10,.75)";g.stroke();
+  g.lineWidth=.045;g.strokeStyle=n===20?"rgba(190,150,255,.55)":"rgba(20,24,10,.3)";g.beginPath();
+  for(i=1;i<N;i++){a=a0+(a1-a0)*i/N;g.moveTo(Math.cos(a)*.22,cy+.04+Math.sin(a)*.1);g.lineTo(Math.cos(a)*R*.97,cy+Math.sin(a)*R*.97);}g.stroke();
+  g.fillStyle=n===20?"rgba(220,200,255,.9)":"rgba(255,255,255,.45)";
+  if(n===20){var r=rng(20);for(i=0;i<9;i++){ell(g,-.6+r()*1.2,-.45+r()*.8,.035,.035);g.fill();}}else{ell(g,-.38,-.2,.2,.09,-.9);g.fill();}
+}
+function thumb(cv,n){
+  var g=cv.getContext("2d"),k=cv.width/W,L=LV[n-1],p=[[0,0]].concat(shapeOf(L),[[W,0]]),o=L.o?L.o():[],i,j;
+  g.setTransform(k,0,0,k,0,0);g.fillStyle="#b9ad90";g.fillRect(0,0,W,H);g.fillStyle="#19200f";
+  g.beginPath();for(i=0;i<p.length;i++)g.lineTo(p[i][0],p[i][1]);g.closePath();
+  for(j=0;j<o.length;j++){g.moveTo(o[j][0][0],o[j][0][1]);for(i=1;i<o[j].length;i++)g.lineTo(o[j][i][0],o[j][i][1]);g.closePath();}
+  g.fill("evenodd");
+}
+var lvSel=1;
+function isOpen(n){return openAll||n<=unlocked;}
+function buildLevels(){
+  var G=$("lvGrid");
+  for(var n=1;n<=LV.length;n++){var b=document.createElement("button"),c=document.createElement("canvas"),t=document.createElement("canvas"),s=document.createElement("span");
+    b.type="button";b.className="lvc";b.dataset.n=n;c.width=100;c.height=Math.round(100*H/W);thumb(c,n);t.width=t.height=56;t.className="tro";paintTrophy(t,n);s.textContent=n;
+    b.appendChild(c);b.appendChild(t);b.appendChild(s);G.appendChild(b);}
+  G.addEventListener("click",function(e){var b=e.target.closest(".lvc");if(b){lvSel=+b.dataset.n;markLevels();}});
+}
+function markLevels(){
+  var c=$("lvGrid").children,i,n,L=LV[lvSel-1],open=isOpen(lvSel),won1=done.indexOf(lvSel)>=0;
+  for(i=0;i<c.length;i++){n=i+1;c[i].classList.toggle("lock",!isOpen(n));c[i].classList.toggle("done",done.indexOf(n)>=0);c[i].classList.toggle("sel",n===lvSel);c[i].classList.toggle("cur",n===level);
+    c[i].setAttribute("aria-label","Livello "+n+", "+LV[i].n+(done.indexOf(n)>=0?", vinto":isOpen(n)?"":", chiuso"));}
+  paintTrophy($("lvIcon"),lvSel);$("lvIcon").style.opacity=won1?1:.35;
+  $("lvInfo").textContent="Livello "+lvSel+", "+L.n+". "+(won1?"Hai già vinto la "+rewName(lvSel)+".":open?"In palio la "+rewName(lvSel)+".":"Si apre vincendo il livello "+(lvSel-1)+".");
+  $("lvGo").disabled=!open;$("lvGo").textContent=lvSel===level&&!over?"Ricomincia":"Gioca";
+}
+function levels(on){paused=on;$("levels").classList.toggle("on",on);if(on){lvSel=level;markLevels();try{$("lvGo").focus();}catch(e){}}else last=performance.now();}
+$("lvl").addEventListener("click",function(){levels(true);});
+$("lvClose").addEventListener("click",function(){levels(false);});
+$("lvGo").addEventListener("click",function(){if(!isOpen(lvSel))return;setLevel(lvSel);levels(false);newGame();});
 function newGame(){$("over").classList.remove("on");fresh();hint=false;setScore();markLadder();paintNext();save();}
 
 /* ---------- scocchia e vinci ---------- */
@@ -491,15 +641,37 @@ function resize(){
   scale=Math.min(aw/W,ah/H);var dpr=Math.min(window.devicePixelRatio||1,3);
   cv.style.width=Math.floor(W*scale)+"px";cv.style.height=Math.floor(H*scale)+"px";
   cv.width=Math.floor(W*scale*dpr);cv.height=Math.floor(H*scale*dpr);K=cv.width/W;
-  sprites=RAD.map(function(r,t){return sprite(t,r*K);});
+  sprites=RAD.map(function(r,t){return sprite(t,r*K);});bgDirty=true;
 }
 
 /* ---------- disegno ---------- */
 function drawBody(t,x,y,r,a){var s=sprites[t];if(!s)return;ctx.save();ctx.translate(x,y);ctx.rotate(a);var d=(r+2/K)*2;ctx.drawImage(s,-d/2,-d/2,d,d);ctx.restore();}
+function tracePlay(g){
+  var i,j,p;g.moveTo(playPoly[0][0],playPoly[0][1]);for(i=1;i<playPoly.length;i++)g.lineTo(playPoly[i][0],playPoly[i][1]);g.closePath();
+  for(j=0;j<obst.length;j++){p=obst[j];g.moveTo(p[0][0],p[0][1]);for(i=1;i<p.length;i++)g.lineTo(p[i][0],p[i][1]);g.closePath();}
+}
+/* il cocchiodromo: travertino pieno, con dentro scavata la forma del livello */
+function buildBg(){
+  if(!bg)bg=document.createElement("canvas");bg.width=cv.width;bg.height=cv.height;
+  var g=bg.getContext("2d"),r=rng(level*97+5),i,j,p,dark=LV[level-1].dark;g.setTransform(K,0,0,K,0,0);
+  g.fillStyle="#eadfc6";g.fillRect(0,0,W,H);
+  g.fillStyle="rgba(120,98,58,.17)";for(i=0;i<240;i++){ell(g,r()*W,r()*H,1.5+r()*6,.6+r()*1.3,(r()-.5)*.3);g.fill();}
+  g.beginPath();tracePlay(g);
+  var gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,"#222b14");gr.addColorStop(1,"#141a0b");g.fillStyle=gr;g.fill("evenodd");
+  g.save();g.clip("evenodd");g.lineWidth=9;g.strokeStyle="rgba(0,0,0,.3)";g.stroke();g.restore();
+  g.lineWidth=1.5;g.strokeStyle="rgba(60,48,24,.55)";g.stroke();
+  if(dark)for(j=0;j<obst.length;j++){p=obst[j];var cx=0,cy=0,rd=0;for(i=0;i<p.length;i++){cx+=p[i][0]/p.length;cy+=p[i][1]/p.length;}rd=Math.abs(p[0][0]-cx)+Math.abs(p[0][1]-cy);
+    g.beginPath();g.arc(cx,cy,rd,0,TAU);var dg=g.createRadialGradient(cx,cy,rd*.2,cx,cy,rd);dg.addColorStop(0,"#000");dg.addColorStop(.8,"#0c0618");dg.addColorStop(1,"#3a2170");g.fillStyle=dg;g.fill();
+    g.lineWidth=2.5;g.strokeStyle="rgba(170,125,255,.8)";g.stroke();}
+  bgDirty=false;
+}
+var bg=null;
 function draw(dt){
   ctx.setTransform(K,0,0,K,0,0);ctx.clearRect(0,0,W,H);
   if(shakeAmp>.2){ctx.translate((Math.random()-.5)*shakeAmp,(Math.random()-.5)*shakeAmp);shakeAmp*=Math.pow(.002,dt);}else shakeAmp=0;
-  var gr=ctx.createLinearGradient(0,0,0,H);gr.addColorStop(0,"#222b14");gr.addColorStop(1,"#141a0b");ctx.fillStyle=gr;ctx.fillRect(-20,-20,W+40,H+40);
+  ctx.fillStyle="#141a0b";ctx.fillRect(-20,-20,W+40,H+40);
+  if(bgDirty||!bg||bg.width!==cv.width)buildBg();ctx.drawImage(bg,0,0,W,H);
+  ctx.font="700 13px Figtree,system-ui,sans-serif";ctx.textAlign="left";ctx.fillStyle="rgba(234,223,198,.5)";ctx.fillText("Livello "+level+" · "+LV[level-1].n,10,21);
   /* linea di troppo pieno */
   var warn=Math.min(1,overT/2.4);
   ctx.save();ctx.setLineDash([10,9]);ctx.lineWidth=2.5;
@@ -507,7 +679,7 @@ function draw(dt){
   ctx.beginPath();ctx.moveTo(6,LINE_Y);ctx.lineTo(W-6,LINE_Y);ctx.stroke();ctx.restore();
   if(warn>.08){ctx.fillStyle="rgba(226,85,58,"+(.10+.18*warn)+")";ctx.fillRect(0,0,W,LINE_Y);}
   /* guida di caduta */
-  if(!over&&canDrop){ctx.save();ctx.setLineDash([3,9]);ctx.lineWidth=2;ctx.strokeStyle="rgba(245,185,59,.5)";ctx.beginPath();ctx.moveTo(holdX,HOLD_Y+RAD[cur]+4);ctx.lineTo(holdX,H);ctx.stroke();ctx.restore();}
+  if(!over&&canDrop){ctx.save();ctx.setLineDash([3,9]);ctx.lineWidth=2;ctx.strokeStyle="rgba(245,185,59,.5)";ctx.beginPath();ctx.moveTo(holdX,HOLD_Y+RAD[cur]+4);ctx.lineTo(holdX,rayDown(holdX));ctx.stroke();ctx.restore();}
   var i,b;
   for(i=0;i<rings.length;i++){var q=rings[i],e=1-q.life;ctx.globalAlpha=q.life*.7;ctx.strokeStyle=q.col;ctx.lineWidth=6*q.life+1;ctx.beginPath();ctx.arc(q.x,q.y,q.r+(q.R-q.r)*(1-Math.pow(1-e,3)),0,TAU);ctx.stroke();}
   ctx.globalAlpha=1;
@@ -535,19 +707,21 @@ function fx(dt){
 var last=0,acc=0,saveT=0;
 function frame(ts){
   var dt=Math.min(.05,(ts-last)/1000||0);last=ts;
-  if(!over&&!paused&&!document.hidden){acc+=dt;while(acc>=STEP){step(STEP);acc-=STEP;if(over)break;}
+  if(!over&&!paused&&!document.hidden){acc+=dt;while(acc>=STEP){step(STEP);acc-=STEP;if(over)break;}rescue();
     if(!canDrop&&!winAt&&time-dropAt>.5){cur=next;next=pick();canDrop=true;clampHold();paintNext();}
     if(tickets.length&&!winAt&&!over&&time>tkAt)openTicket();
     saveT+=dt;if(saveT>4){saveT=0;save();}}
   fx(dt);draw(dt);requestAnimationFrame(frame);
 }
 function start(hotData){
-  var st=load();if(st){best=+st.best||0;muted=!!st.muted;}
+  var st=load();if(st){best=+st.best||0;muted=!!st.muted;unlocked=Math.max(1,Math.min(LV.length,st.unlocked|0));
+    if(Array.isArray(st.done))done=st.done.filter(function(n){return n>=1&&n<=LV.length&&n===(n|0);});}
+  setLevel(st&&st.lv&&(openAll||st.lv<=unlocked)?st.lv:1);
   var g=(hotData&&hotData.v===SV)?hotData:(st&&st.game);
   if(hotData&&hotData.best>best)best=hotData.best;
   if(!restore(g))fresh();
   $("sound").textContent=muted?"Audio no":"Audio sì";
-  buildLadder();buildLegend();markLadder();paintNext();setScore();resize();
+  buildLadder();buildLegend();buildLevels();markLadder();paintNext();setScore();resize();
   if(window.ResizeObserver)new ResizeObserver(resize).observe(stage);else window.addEventListener("resize",resize);
   document.addEventListener("visibilitychange",function(){if(document.hidden)save();else last=performance.now();});
   window.addEventListener("pagehide",save);
