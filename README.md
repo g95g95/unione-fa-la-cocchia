@@ -1,6 +1,6 @@
 # L'unione fa la cocchia
 
-Gioco da browser: fai cadere le cocchie (i gusci, in ascolano) nel cocchiodromo. Due cocchie uguali che si toccano si fondono in quella più grossa. Si vince un livello arrivando alla Cocchia d'oro, si perde se il cocchiodromo si riempie. I livelli sono 20, ognuno con un cocchiodromo di forma diversa.
+Gioco da browser: fai cadere le cocchie (i gusci, in ascolano) nel cocchiodromo. Due cocchie uguali che si toccano si fondono in quella più grossa. Si vince un livello arrivando alla Cocchia d'oro, si perde se il cocchiodromo si riempie. I livelli sono 20, ognuno con un cocchiodromo di forma diversa: sedici piatti, tre a tre dimensioni e l'ultimo a quattro.
 
 Gioca: https://g95g95.github.io/unione-fa-la-cocchia/
 
@@ -39,7 +39,7 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 | 3 | Tinozza | 98% | Cocchia nocciola |
 | 4 | Scivolo | 97% | Cocchia mandorla |
 | 5 | Emme | 96% | Cocchia castagna |
-| 6 | Imbuto | 95% | Cocchia noce |
+| 6 | Tramoggia | 95% | Cocchia noce |
 | 7 | Conca | 94% | Cocchia uovo |
 | 8 | Scalinata | 93% | Cocchia vongola |
 | 9 | Gradino | 92% | Cocchia cozza |
@@ -50,13 +50,15 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 | 14 | Clessidra | 87% | Cocchia tartaruga |
 | 15 | Sega | 86% | Cocchia perla |
 | 16 | Pettine | 85% | Cocchia corallo |
-| 17 | Serpentina | 84% | Cocchia bronzo |
-| 18 | Flipper | 94% | Cocchia argento |
-| 19 | Mensole | 97% | Cocchia oro |
-| 20 | Buco nero | 89% | Cocchia Dark Matter |
+| 17 | Vasca | 3D | Cocchia bronzo |
+| 18 | Cilindro | 3D | Cocchia argento |
+| 19 | Imbuto | 3D | Cocchia oro |
+| 20 | Tesseratto | 4D | Cocchia Dark Matter |
 
-- Dal livello 1 al 17 la bocca resta uguale e ogni livello toglie l'1% di spazio sotto la linea. Dal 18 al 20 lo spazio torna largo, ma dentro ci sono ostacoli: tre pioli, due mensole, un buco nero.
-- L'ordine delle forme è stato tarato con un giocatore automatico (120 partite per livello, sempre la stessa strategia): i suoi punti medi scendono da circa 18.800 al livello 1 a circa 10.300 al livello 20.
+- Dal livello 1 al 16 la bocca resta uguale e ogni livello toglie l'1% di spazio sotto la linea.
+- Nei livelli 17, 18 e 19 il cocchiodromo ha anche la profondità e le cocchie sono sfere. Col dito (o col mouse) destra e sinistra spostano la cocchia, su e giù scelgono la profondità: in basso vicino, in alto lontano. Un'ombra gialla segna dove andrà a cadere. Da tastiera: frecce per spostarla, spazio per lasciarla.
+- Il livello 20 è un tesseratto, un ipercubo: oltre alla profondità c'è una quarta dimensione, che si sceglie col cursore sotto il cocchiodromo (o con i tasti Q ed E). Il cubo piccolo disegnato dentro quello grande è l'altro capo della quarta dimensione: le cocchie che stanno da quella parte si vedono più piccole e violacee. Due cocchie si fondono solo se si toccano in tutte e quattro le dimensioni.
+- L'ordine dei livelli piatti è stato tarato con un giocatore automatico (120 partite per livello, sempre la stessa strategia): i suoi punti medi scendono da circa 18.800 al livello 1 a circa 12.400 al livello 16. Nei livelli 3D e 4D lo stesso giocatore arriva di solito al cocco e non vince quasi mai; lì i punti non sono confrontabili con quelli dei livelli piatti, perché le fusioni a catena sono molto più frequenti.
 - Per provare tutti i livelli senza vincerli, apri il gioco aggiungendo `?sblocca` all'indirizzo.
 
 ## Com'è fatto
