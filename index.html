@@ -10,10 +10,10 @@
 <style>
 :root{
   /* Layout: colonna unica da telefono. Punteggio a sinistra, prossima cocchia a destra,
-     barattolo di travertino al centro, scala delle cocchie e comandi sotto. Tema unico, per scelta. */
+     cocchiodromo di travertino al centro, scala delle cocchie e comandi sotto. Tema unico, per scelta. */
   color-scheme: dark;
   --olive:#2b3619;        /* fondo pagina, verde oliva ascolana */
-  --olive-deep:#19200f;   /* interno del barattolo */
+  --olive-deep:#19200f;   /* interno del cocchiodromo */
   --olive-soft:#3d4b25;   /* superfici dei comandi */
   --trav:#eadfc6;         /* travertino: cornice e testo */
   --trav-dim:#b3aa8f;     /* testo secondario */
@@ -105,10 +105,10 @@ button.primary{background:var(--yolk);color:#1c2410}
   </header>
 
   <div id="stage">
-    <div id="jar"><canvas id="game" aria-label="Barattolo delle cocchie"></canvas></div>
+    <div id="jar"><canvas id="game" aria-label="Cocchiodromo"></canvas></div>
     <div id="over" class="ovl" role="dialog" aria-modal="true" aria-labelledby="overTitle">
       <div class="card">
-        <h2 id="overTitle">Barattolo pieno</h2>
+        <h2 id="overTitle">Cocchiodromo pieno</h2>
         <div class="big" id="overScore">0</div>
         <p id="overBest"></p>
         <div class="reach"><canvas id="overIcon" width="96" height="96"></canvas><p id="overReach"></p></div>
@@ -121,7 +121,7 @@ button.primary{background:var(--yolk);color:#1c2410}
     <div id="legend" class="ovl" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
       <div class="card">
         <h2 id="legendTitle">Le cocchie</h2>
-        <p>Unisci due tartarughe, fai la Cocchia d'oro e hai vinto. Ogni cocchia nuova dalla nocciola in su ti regala un gratta e vinci: con tre uguali guadagni una scossa.</p>
+        <p>Unisci due tartarughe, fai la Cocchia d'oro e hai vinto. Ogni cocchia nuova dalla nocciola in su ti regala uno scocchia e vinci: con tre uguali guadagni una scossa.</p>
         <ol id="legendList"></ol>
         <div class="row"><button id="legendClose" type="button" class="primary">Torna a giocare</button></div>
       </div>
@@ -153,7 +153,7 @@ button.primary{background:var(--yolk);color:#1c2410}
 (function(){
 "use strict";
 var TAU=Math.PI*2;
-var W=400,H=580,HOLD_Y=52,LINE_Y=108;
+var W=400,H=522,HOLD_Y=52,LINE_Y=108;
 var G=1700,REST=0.12,MU=0.35,STEP=1/120,ITER=8;
 var RAD=[14,16,19,21,25,28,32,37,43,49,57,65,75,87,100];
 var PLUR=["pistacchi","arachidi","nocciole","mandorle","castagne","noci","uova","vongole","cozze","lumache","ricci di mare","granchi","cocchi","tartarughe","Cocchie d'oro"];
@@ -343,7 +343,7 @@ function endGame(win){
   var rec=score>best;if(rec)best=score;
   if(win){blip(523,.18,"triangle",.2);blip(659,.18,"triangle",.2,.14);blip(784,.18,"triangle",.2,.28);blip(1047,.5,"triangle",.22,.42);buzz([30,40,30,40,120]);}
   else{blip(300,.5,"sawtooth",.12);blip(200,.6,"sawtooth",.1,.15);buzz([40,60,80]);}
-  $("overTitle").textContent=win?"Hai fatto la Cocchia d'oro":"Barattolo pieno";
+  $("overTitle").textContent=win?"Hai fatto la Cocchia d'oro":"Cocchiodromo pieno";
   $("overScore").textContent=score;
   $("overBest").textContent=(win?"Partita finita, hai vinto. ":"")+(rec?"Nuovo record.":"Il tuo record resta "+best+".");
   $("overReach").textContent=win?"Hai unito tutte e "+RAD.length+" le cocchie.":"Sei arrivato a "+NAMES[maxTier]+", cocchia "+(maxTier+1)+" di "+RAD.length+".";
@@ -396,7 +396,7 @@ $("copy").addEventListener("click",function(){
 });
 function newGame(){$("over").classList.remove("on");fresh();hint=false;setScore();markLadder();paintNext();save();}
 
-/* ---------- gratta e vinci ---------- */
+/* ---------- scocchia e vinci ---------- */
 var TK={W:590,H:887,bx:82,by:281,bw:421,bh:222,
   cells:[[88,288,221,385],[232,287,358,385],[370,288,497,385],[88,399,221,497],[232,399,358,497],[370,399,497,497]],
   cx:[[13,124],[128,236],[240,348],[352,459],[463,574]],cy:[[516,621],[626,729],[738,866]]};
