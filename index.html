@@ -121,7 +121,7 @@ button.primary{background:var(--yolk);color:#1c2410}
     <div id="legend" class="ovl" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
       <div class="card">
         <h2 id="legendTitle">Le cocchie</h2>
-        <p>Unisci due tartarughe, fai la Cocchia d'oro e hai vinto. Ogni cocchia nuova dalla nocciola in su ti regala un gratta e vinci: con tre uguali guadagni una scossa.</p>
+        <p>Unisci due tartarughe, fai la Cocchia d'oro e hai vinto. Ogni cocchia nuova dalla nocciola in su ti regala uno scocchia e vinci: con tre uguali guadagni una scossa.</p>
         <ol id="legendList"></ol>
         <div class="row"><button id="legendClose" type="button" class="primary">Torna a giocare</button></div>
       </div>
@@ -396,7 +396,7 @@ $("copy").addEventListener("click",function(){
 });
 function newGame(){$("over").classList.remove("on");fresh();hint=false;setScore();markLadder();paintNext();save();}
 
-/* ---------- gratta e vinci ---------- */
+/* ---------- scocchia e vinci ---------- */
 var TK={W:590,H:887,bx:82,by:281,bw:421,bh:222,
   cells:[[88,288,221,385],[232,287,358,385],[370,288,497,385],[88,399,221,497],[232,399,358,497],[370,399,497,497]],
   cx:[[13,124],[128,236],[240,348],[352,459],[463,574]],cy:[[516,621],[626,729],[738,866]]};
