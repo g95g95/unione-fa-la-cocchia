@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>L'unione fa la cocchia</title>
+<!-- app installabile sul telefono, col nome Open Cocchia -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="application-name" content="Open Cocchia">
+<meta name="apple-mobile-web-app-title" content="Open Cocchia">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2b3619">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@500;700&display=swap" rel="stylesheet">
@@ -900,6 +909,8 @@ function start(hotData){
 var hot=window.claude&&window.claude.hot;
 if(hot&&hot.snapshot)try{hot.snapshot(function(){var s=serialize();s.best=best;return s;});}catch(e){}
 if(hot&&hot.ready)hot.ready(start);else start((hot&&hot.data)||{});
+/* il service worker tiene una copia del gioco per quando manca la rete */
+if(!hot&&"serviceWorker" in navigator&&/^https?:$/.test(location.protocol))window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
 })();
 </script>
 </body>

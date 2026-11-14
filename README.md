@@ -61,6 +61,13 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 - L'ordine dei livelli piatti è stato tarato con un giocatore automatico (120 partite per livello, sempre la stessa strategia): i suoi punti medi scendono da circa 18.800 al livello 1 a circa 12.400 al livello 16. Nei livelli 3D e 4D lo stesso giocatore arriva di solito al cocco e non vince quasi mai; lì i punti non sono confrontabili con quelli dei livelli piatti, perché le fusioni a catena sono molto più frequenti.
 - Per provare tutti i livelli senza vincerli, apri il gioco aggiungendo `?sblocca` all'indirizzo.
 
+## L'app: Open Cocchia
+
+Il gioco si può installare sul telefono come app, con il nome Open Cocchia e la Cocchia d'oro grattata per metà come icona. Una volta installato si apre a tutto schermo e funziona anche senza rete.
+
+- Android (Chrome): apri il gioco, poi menu ⋮ e "Installa app" (o "Aggiungi a schermata Home").
+- iPhone (Safari): apri il gioco, poi Condividi e "Aggiungi alla schermata Home".
+
 ## Com'è fatto
 
-Un solo file, `index.html`: nessuna installazione e nessun server. Record, partita in corso, livelli aperti e cocchie vinte restano nel browser di chi gioca.
+Il gioco è tutto in `index.html`: nessuna installazione e nessun server. Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti e cocchie vinte restano nel browser di chi gioca.
