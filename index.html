@@ -93,6 +93,10 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .ladder canvas.seen{opacity:1}
 .ladder i{flex:1;height:2px;background:var(--olive-soft);border-radius:2px;min-width:2px}
 
+.inst{display:none;gap:5px}
+.inst.on{display:flex}
+.inst button{min-height:38px;font-size:13px}
+#instX{flex:none;width:38px;font-size:18px}
 .controls{display:flex;gap:5px}
 .controls button{font-size:13px;padding:0 3px;min-width:0}
 button{font:700 14px/1 var(--body);color:var(--trav);background:var(--olive-soft);border:0;border-radius:12px;
@@ -158,6 +162,11 @@ button.primary{background:var(--yolk);color:#1c2410}
 
   <div class="ladder" id="ladder" aria-label="Scala delle cocchie, dalla più piccola alla più grande"></div>
 
+  <div class="inst" id="inst">
+    <button id="instBtn" type="button" class="primary">Installa Open Cocchia</button>
+    <button id="instX" type="button" aria-label="Nascondi il pulsante di installazione">×</button>
+  </div>
+
   <div class="controls">
     <button id="shake" type="button">Scossa <b id="shakeN">2</b></button>
     <button id="sound" type="button">Audio sì</button>
@@ -174,6 +183,14 @@ button.primary{background:var(--yolk);color:#1c2410}
     <div id="lvGrid"></div>
     <div class="reach"><canvas id="lvIcon" width="96" height="96"></canvas><p id="lvInfo"></p></div>
     <div class="row"><button id="lvClose" type="button">Chiudi</button><button id="lvGo" type="button" class="primary">Gioca</button></div>
+  </div>
+</div>
+
+<div id="instHow" class="ovl full" role="dialog" aria-modal="true" aria-labelledby="instTitle">
+  <div class="card">
+    <h2 id="instTitle">Installa Open Cocchia</h2>
+    <p style="margin:10px 0 16px">Tocca Condividi, il quadrato con la freccia verso l'alto, poi scegli «Aggiungi alla schermata Home».</p>
+    <div class="row"><button id="instOk" type="button" class="primary">Ho capito</button></div>
   </div>
 </div>
 
@@ -911,6 +928,23 @@ if(hot&&hot.snapshot)try{hot.snapshot(function(){var s=serialize();s.best=best;r
 if(hot&&hot.ready)hot.ready(start);else start((hot&&hot.data)||{});
 /* il service worker tiene una copia del gioco per quando manca la rete */
 if(!hot&&"serviceWorker" in navigator&&/^https?:$/.test(location.protocol))window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+/* pulsante Installa: compare solo dove l'app si puo' installare e non lo e' gia'.
+   Chrome e simili avvisano con beforeinstallprompt e fanno tutto loro; su iPhone si puo' solo spiegare la strada, che passa da Condividi. */
+(function(){
+  if(hot)return;
+  var row=$("inst"),ask=null,NOI="open-cocchia-noinst",hid=false;
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  var alone=!!(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  try{hid=localStorage.getItem(NOI)==="1";}catch(e){}
+  function show(on){row.classList.toggle("on",on&&!alone&&!hid);}
+  function how(on){paused=on;$("instHow").classList.toggle("on",on);if(on){try{$("instOk").focus();}catch(e){}}else last=performance.now();}
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();ask=e;show(true);});
+  window.addEventListener("appinstalled",function(){ask=null;alone=true;show(false);});
+  if(ios)show(true);
+  $("instBtn").addEventListener("click",function(){if(!ask){how(true);return;}var a=ask;ask=null;show(false);try{a.prompt();}catch(e){}});
+  $("instX").addEventListener("click",function(){hid=true;try{localStorage.setItem(NOI,"1");}catch(e){}show(false);});
+  $("instOk").addEventListener("click",function(){how(false);});
+})();
 })();
 </script>
 </body>

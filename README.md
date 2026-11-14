@@ -65,8 +65,10 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 
 Il gioco si può installare sul telefono come app, con il nome Open Cocchia e la Cocchia d'oro grattata per metà come icona. Una volta installato si apre a tutto schermo e funziona anche senza rete.
 
-- Android (Chrome): apri il gioco, poi menu ⋮ e "Installa app" (o "Aggiungi a schermata Home").
-- iPhone (Safari): apri il gioco, poi Condividi e "Aggiungi alla schermata Home".
+Dove l'app si può installare, sopra i comandi compare il pulsante giallo "Installa Open Cocchia"; la × accanto lo nasconde per sempre su quel telefono.
+
+- Android (Chrome): tocca il pulsante e conferma. In alternativa menu ⋮ e "Installa app" (o "Aggiungi a schermata Home").
+- iPhone (Safari): lì l'installazione passa per forza da Condividi, quindi il pulsante mostra solo la strada: Condividi, poi "Aggiungi alla schermata Home".
 
 ## Com'è fatto
 
