@@ -329,6 +329,7 @@ var bodies=[],parts=[],pops=[],rings=[];
 var score=0,best=0,cur=0,next=1,holdX=W/2,canDrop=true,dropAt=0,time=0;
 var won=false,over=false,overT=0,shakes=2,maxTier=0,combo=0,lastMerge=-9,shakeAmp=0,hint=true,muted=false,idc=1;
 var aiming=false,paused=false,winAt=0,seen=[],tickets=[],tkCount=0,tkAt=0,tkOpen=null;
+var shakeAt=-9,shakeK=4,shakeS=[1,1,1],graceAt=0;
 
 /* ---------- geometria del livello ---------- */
 var level=1,unlocked=1,done=[],segs=[],playPoly=[],bgDirty=true,hnx=0,hny=0;
@@ -419,7 +420,7 @@ function clampHoldN(){
   var ex=holdX-W/2,ez=holdZ-g.R,d=Math.sqrt(ex*ex+ez*ez),m=g.R-r;if(d>m){holdX=W/2+ex/d*m;holdZ=g.R+ez/d*m;}holdU=0;
 }
 function stepN(dt){
-  time+=dt;var i,j,it,a,b,c,n=bodies.length,merge=null,ima,rx,ry,rz,ru,vn,dj,j0;
+  time+=dt;if(shakeK<4)shakeStep();var i,j,it,a,b,c,n=bodies.length,merge=null,ima,rx,ry,rz,ru,vn,dj,j0;
   for(i=0;i<n;i++){b=bodies[i];b.vy+=G*dt;if(b.r<b.R)b.r=Math.min(b.R,b.r+b.R*dt*7);
     var sp=Math.sqrt(b.vx*b.vx+b.vy*b.vy+b.vz*b.vz+b.vu*b.vu);if(sp>1500){sp=1500/sp;b.vx*=sp;b.vy*=sp;b.vz*=sp;b.vu*=sp;}}
   csN.length=0;
@@ -459,7 +460,7 @@ function mk(t,x,y){var R=RAD[t],m=R*R/1000;return{id:idc++,t:t,x:x,y:y,z:0,u:0,v
 function hiTier(){return maxTier<=5?Math.max(0,maxTier-1):Math.min(8,4+Math.floor((maxTier-5)/2));}
 function pick(){var h=hiTier(),l=Math.max(0,h-4);return l+Math.floor(Math.random()*(h-l+1));}
 function fresh(){
-  bodies=[];parts=[];pops=[];rings=[];score=0;time=0;over=false;overT=0;winAt=0;shakes=2;maxTier=0;combo=0;seen=[];tickets=[];tkCount=0;tkOpen=null;lastMerge=-9;canDrop=true;holdX=W/2;dropsN=0;
+  bodies=[];parts=[];pops=[];rings=[];score=0;time=0;over=false;overT=0;winAt=0;shakes=2;maxTier=0;combo=0;seen=[];tickets=[];tkCount=0;tkOpen=null;lastMerge=-9;canDrop=true;holdX=W/2;dropsN=0;shakeAt=-9;shakeK=4;graceAt=0;
   if(ND){holdZ=GEO.dz/2;holdU=GEO.du/2;$("uAim").value=50;}
   cur=pick();next=pick();
   var seed=[[0,70],[0,190],[0,300]];
@@ -494,10 +495,30 @@ function blip(f,d,type,vol,delay){
 }
 function buzz(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
 
+/* ---------- scossa ----------
+   Il cocchiodromo si muove tutto insieme: quattro colpi in quattro decimi di secondo, uguali per tutte le cocchie, cosi' il mucchio
+   si sposta davvero invece di ricadere com'era (spinte a caso, una per cocchia, si annullano tra vicine).
+   In orizzontale va, torna e va di nuovo; nei livelli 3D si muove intanto anche in profondita', nel tesseratto pure nella quarta dimensione.
+   I numeri (forza, tempi, tregua) sono tarati con il giocatore automatico su mucchi a un passo dal troppo pieno. */
+var SK_T=[0,.13,.26,.39],SK_X=[1,-2,2,-1],SK_Z=[1.3,-1.3,-1.3,1.3],SK_U=[-.7,1.4,-1.4,.7],SK_A=520,SK_GRACE=2;
+function shakeStep(){
+  while(shakeK<4&&time-shakeAt>=SK_T[shakeK]){
+    var k=shakeK++,ax=shakeS[0]*SK_X[k]*SK_A,az=shakeS[1]*SK_Z[k]*SK_A,au=shakeS[2]*SK_U[k]*SK_A;
+    for(var i=0;i<bodies.length;i++){var b=bodies[i];b.vx+=ax;b.vy-=k?160:420+Math.random()*160;
+      if(ND){b.vz+=az;if(ND===4)b.vu+=au;}else if(!k)b.w+=(Math.random()-.5)*8;}
+  }
+}
+function shake(){
+  if(over||paused||winAt||shakes<=0)return;audioOn();shakes--;
+  shakeAt=time;shakeK=0;for(var i=0;i<3;i++)shakeS[i]=Math.random()<.5?1:-1;
+  graceAt=time+SK_GRACE; /* tregua: finche' le cocchie sono per aria il conto del troppo pieno sta fermo */
+  if(!reduce)shakeAmp=6;blip(120,.25,"square",.1);blip(95,.1,"square",.07,.13);blip(95,.1,"square",.07,.26);buzz([25,35,25,35,25]);setScore();save();
+}
+
 /* ---------- fisica ---------- */
 var cs=[];
 function step(dt){
-  time+=dt;var i,j,k,s,a,b,c,n=bodies.length,ns=segs.length;
+  time+=dt;if(shakeK<4)shakeStep();var i,j,k,s,a,b,c,n=bodies.length,ns=segs.length;
   for(i=0;i<n;i++){b=bodies[i];b.vy+=G*dt;
     if(b.r<b.R)b.r=Math.min(b.R,b.r+b.R*dt*7);
     var sp=Math.sqrt(b.vx*b.vx+b.vy*b.vy);if(sp>1500){b.vx*=1500/sp;b.vy*=1500/sp;}
@@ -541,6 +562,7 @@ function fullCheck(dt){
   var hot=false,i,b;
   for(i=0;i<bodies.length;i++){b=bodies[i];if(time-b.born>1.1&&b.y-b.r<LINE_Y){hot=true;break;}}
   if(winAt){overT=0;if(time>winAt)endGame(true);return;}
+  if(time<graceAt)return;
   overT=hot?overT+dt:Math.max(0,overT-dt*2);
   if(overT>2.4)endGame(false);
 }
@@ -618,12 +640,7 @@ window.addEventListener("keydown",function(e){
   else if(ND===4&&(k==="q"||k==="e")){holdU+=k==="e"?14:-14;clampHold();$("uAim").value=Math.round(holdU/GEO.du*100);e.preventDefault();}
   else if((k===" "||k==="ArrowDown")&&e.target.tagName!=="BUTTON"){drop();e.preventDefault();}
 });
-$("shake").addEventListener("click",function(){
-  if(over||paused||winAt||shakes<=0)return;audioOn();shakes--;
-  for(var i=0;i<bodies.length;i++){var b=bodies[i];b.vy-=520+Math.random()*280;b.vx+=(Math.random()-.5)*620;b.w+=(Math.random()-.5)*8;
-    if(ND){b.vz+=(Math.random()-.5)*620;if(ND===4)b.vu+=(Math.random()-.5)*620;}}
-  if(!reduce)shakeAmp=12;blip(120,.25,"square",.1);buzz([20,20,20]);setScore();save();
-});
+$("shake").addEventListener("click",shake);
 $("uAim").addEventListener("input",function(){if(ND===4){holdU=GEO.du*this.value/100;clampHold();}});
 $("sound").addEventListener("click",function(){muted=!muted;if(!muted)audioOn();this.textContent=muted?"Audio no":"Audio sì";blip(520,.08,"sine",.15);save();});
 var armT=0;
@@ -861,6 +878,7 @@ function sceneN(){
 }
 function draw(dt){
   ctx.setTransform(K,0,0,K,0,0);ctx.clearRect(0,0,W,H);
+  var sw=time-shakeAt;if(!reduce&&sw<.52)ctx.translate(-shakeS[0]*Math.sin(sw/.52*TAU*1.5)*10,0); /* il cocchiodromo va, torna e va di nuovo insieme ai colpi */
   if(shakeAmp>.2){ctx.translate((Math.random()-.5)*shakeAmp,(Math.random()-.5)*shakeAmp);shakeAmp*=Math.pow(.002,dt);}else shakeAmp=0;
   if(ND)sceneN();else{
   ctx.fillStyle="#141a0b";ctx.fillRect(-20,-20,W+40,H+40);
