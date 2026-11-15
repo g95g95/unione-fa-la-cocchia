@@ -26,6 +26,7 @@ Gioca: https://g95g95.github.io/unione-fa-la-cocchia/
 
 - All'inizio cadono solo pistacchi. Poi cade fino alla cocchia subito sotto la più grossa che hai creato, e dalla noce in su resta sempre più indietro.
 - Parti con 2 scosse, senza limite massimo.
+- La scossa muove il cocchiodromo tutto insieme: va, torna e va di nuovo (nei livelli 3D anche in profondità, nel tesseratto pure nella quarta dimensione), così il mucchio si rimescola e le cocchie uguali si trovano. Per 2 secondi dopo la scossa il conto del cocchiodromo pieno resta fermo: le cocchie lanciate sopra la linea non ti fanno perdere.
 - La prima volta che crei una cocchia dalla nocciola (cocchia 3) alla tartaruga (cocchia 14) esce uno scocchia e vinci "Cocchie d'oro": gratti 6 caselle e con 3 cocchie uguali guadagni una scossa. La probabilità parte da 0,33 e sale di 0,05 a ogni biglietto.
 
 ## I livelli
@@ -59,6 +60,7 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 - Nei livelli 17, 18 e 19 il cocchiodromo ha anche la profondità e le cocchie sono sfere. Col dito (o col mouse) destra e sinistra spostano la cocchia, su e giù scelgono la profondità: in basso vicino, in alto lontano. Un'ombra gialla segna dove andrà a cadere. Da tastiera: frecce per spostarla, spazio per lasciarla.
 - Il livello 20 è un tesseratto, un ipercubo: oltre alla profondità c'è una quarta dimensione, che si sceglie col cursore sotto il cocchiodromo (o con i tasti Q ed E). Il cubo piccolo disegnato dentro quello grande è l'altro capo della quarta dimensione: le cocchie che stanno da quella parte si vedono più piccole e violacee. Due cocchie si fondono solo se si toccano in tutte e quattro le dimensioni.
 - L'ordine dei livelli piatti è stato tarato con un giocatore automatico (120 partite per livello, sempre la stessa strategia): i suoi punti medi scendono da circa 18.800 al livello 1 a circa 12.400 al livello 16. Nei livelli 3D e 4D lo stesso giocatore arriva di solito al cocco e non vince quasi mai; lì i punti non sono confrontabili con quelli dei livelli piatti, perché le fusioni a catena sono molto più frequenti.
+- Anche la scossa è stata tarata con il giocatore automatico, su mucchi a un passo dal cocchiodromo pieno (150 per livello): con la scossa di prima, che spingeva ogni cocchia a caso, la partita finiva lo stesso in circa 6 casi su 10 nei livelli piatti; con questa in circa 1 su 10, e le fusioni per scossa passano da 3 a più di 8.
 - Per provare tutti i livelli senza vincerli, apri il gioco aggiungendo `?sblocca` all'indirizzo.
 
 ## L'app: Open Cocchia
