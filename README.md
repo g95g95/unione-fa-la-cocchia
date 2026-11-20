@@ -28,6 +28,7 @@ Gioca: https://g95g95.github.io/unione-fa-la-cocchia/
 - Parti con 2 scosse, senza limite massimo.
 - La scossa muove il cocchiodromo tutto insieme: va, torna e va di nuovo (nei livelli 3D anche in profondità, nel tesseratto pure nella quarta dimensione), così il mucchio si rimescola e le cocchie uguali si trovano. Per 2 secondi dopo la scossa il conto del cocchiodromo pieno resta fermo: le cocchie lanciate sopra la linea non ti fanno perdere.
 - La prima volta che crei una cocchia dalla nocciola (cocchia 3) alla tartaruga (cocchia 14) esce uno scocchia e vinci "Cocchie d'oro": gratti 6 caselle e con 3 cocchie uguali guadagni una scossa. La probabilità parte da 0,33 e sale di 0,05 a ogni biglietto.
+- Se il biglietto finisce senza tris compare il pulsante "Slop-Machine": un solo giro di slot machine per biglietto perso. Con 3 cocchie uguali sui rulli guadagni una scossa; la probabilità è 0,05.
 
 ## I livelli
 
