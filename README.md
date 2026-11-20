@@ -72,6 +72,10 @@ Dove l'app si può installare, sopra i comandi compare il pulsante giallo "Insta
 - Android (Chrome): tocca il pulsante e conferma. In alternativa menu ⋮ e "Installa app" (o "Aggiungi a schermata Home").
 - iPhone (Safari): lì l'installazione passa per forza da Condividi, quindi il pulsante mostra solo la strada: Condividi, poi "Aggiungi alla schermata Home".
 
+## Contatti
+
+Nella finestra "Cocchie" il link "Contatta gli sviluppatori" apre in una nuova scheda un Google Form. Serve la rete. Le risposte arrivano nel modulo, senza nessun server del gioco.
+
 ## Com'è fatto
 
 Il gioco è tutto in `index.html`: nessuna installazione e nessun server. Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti e cocchie vinte restano nel browser di chi gioca.
