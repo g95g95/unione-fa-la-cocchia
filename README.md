@@ -22,6 +22,28 @@ Gioca: https://g95g95.github.io/unione-fa-la-cocchia/
 14. tartaruga
 15. Cocchia d'oro
 
+## Espansione: le cocchie inanimate
+
+Dalla finestra "Cocchie" si passa dalle cocchie animate a quelle inanimate e ritorno, anche a partita in corso. Le regole e le misure restano le stesse; cambia solo cosa cade nel cocchiodromo. Essendo cose, le cocchie inanimate non hanno la faccina.
+
+1. sassolino
+2. biglia (di vetro)
+3. bottone
+4. tappo
+5. metacrilato
+6. sasso
+7. ginocchio
+8. boccia
+9. pietra
+10. vetro
+11. oblò
+12. palla da bowling
+13. macina
+14. travertino
+15. Cocchia d'oro
+
+Con le inanimate cambiano anche lo scocchia e vinci (caselle e legenda in fondo al biglietto) e la Slop-Machine. I premi dei livelli restano quelli delle cocchie animate.
+
 ## Come si gioca
 
 - All'inizio cadono solo pistacchi. Poi cade fino alla cocchia subito sotto la più grossa che hai creato, e dalla noce in su resta sempre più indietro.
@@ -64,6 +86,39 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 - Anche la scossa è stata tarata con il giocatore automatico, su mucchi a un passo dal cocchiodromo pieno (150 per livello): con la scossa di prima, che spingeva ogni cocchia a caso, la partita finiva lo stesso in circa 6 casi su 10 nei livelli piatti; con questa in circa 1 su 10, e le fusioni per scossa passano da 3 a più di 8.
 - Per provare tutti i livelli senza vincerli, apri il gioco aggiungendo `?sblocca` all'indirizzo.
 
+## Ascoli: gli scacchi delle cocchie
+
+Il pulsante "Ascoli" apre una partita a scacchi contro il computer. Lo scacco qui si chiama ascolo, e vince chi dà ascolo matto.
+
+| Pezzo | Cocchia |
+|---|---|
+| Pedone | pistacchio |
+| Cavallo | uovo |
+| Alfiere | cozza |
+| Torre | granchio |
+| Regina | tartaruga |
+| Re | Cocchia d'oro (con la corona) |
+
+- Si sceglie il livello, da 1 a 10, e se giocare con le chiare (si muove per primi) o con le scure. Le cocchie del computer hanno le sopracciglia arrabbiate.
+- Si muove toccando una propria cocchia e poi la casa d'arrivo, oppure trascinandola. I puntini segnano le mosse possibili.
+- Valgono tutte le regole: arrocco, presa en passant, promozione del pistacchio (si sceglie in cosa diventa), patta per stallo, per tre ripetizioni, per cinquanta mosse senza catture né pistacchi mossi e per materiale insufficiente.
+- "Annulla mossa" riporta indietro la tua ultima mossa e la risposta del computer. La partita in corso resta salvata anche chiudendo il gioco; una stella sul numero segna i livelli già battuti.
+
+| Livello | Nome | Come gioca il computer |
+|---|---|---|
+| 1 | Muove a caso | mosse a caso, ogni tanto mangia un pezzo |
+| 2 | Distratto | guarda solo la mossa che fa, molto rumore e molte mosse a caso |
+| 3 | Goloso | come il 2 ma controlla le catture, meno sviste |
+| 4 | Furbetto | due mosse avanti, con qualche svista |
+| 5 | Attento | due mosse avanti, quasi senza sviste |
+| 6 | Esperto | tre mosse avanti, sbaglia di rado |
+| 7 | Scaltro | tre mosse avanti, quasi senza rumore |
+| 8 | Maestro | quattro mosse avanti, al massimo 1,5 secondi |
+| 9 | Gran maestro | fino a sei mosse avanti, al massimo 2,5 secondi |
+| 10 | Cocchia d'oro | fino a dieci mosse avanti, al massimo 4 secondi |
+
+L'ordine è stato controllato facendo giocare il computer contro sé stesso, ogni livello contro quello dopo. Il livello più alto vince quasi sempre; l'unica coppia vicina è 6 contro 7, dove il 7 vince circa due partite su tre (10 vinte, 5 perse, 1 patta). Dal livello 8 in su le partite sono state poche, perché sono lente.
+
 ## L'app: Open Cocchia
 
 Il gioco si può installare sul telefono come app, con il nome Open Cocchia e la Cocchia d'oro grattata per metà come icona. Una volta installato si apre a tutto schermo e funziona anche senza rete.
@@ -79,4 +134,4 @@ Nella finestra "Cocchie" il link "Contatta gli sviluppatori" apre in una nuova s
 
 ## Com'è fatto
 
-Il gioco è tutto in `index.html`: nessuna installazione e nessun server. Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti e cocchie vinte restano nel browser di chi gioca.
+Il gioco è tutto in `index.html`: nessuna installazione e nessun server. Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti, cocchie vinte, set di cocchie scelto e partita di Ascoli restano nel browser di chi gioca. Il computer di Ascoli pensa in un Web Worker, così la pagina non si blocca mentre cerca la mossa.
