@@ -86,9 +86,9 @@ Ogni livello ha il suo cocchiodromo. Facendo la Cocchia d'oro vinci la cocchia d
 - Anche la scossa è stata tarata con il giocatore automatico, su mucchi a un passo dal cocchiodromo pieno (150 per livello): con la scossa di prima, che spingeva ogni cocchia a caso, la partita finiva lo stesso in circa 6 casi su 10 nei livelli piatti; con questa in circa 1 su 10, e le fusioni per scossa passano da 3 a più di 8.
 - Per provare tutti i livelli senza vincerli, apri il gioco aggiungendo `?sblocca` all'indirizzo.
 
-## Ascoli: gli scacchi delle cocchie
+## Ascoli: gli scocchi delle cocchie
 
-Il pulsante "Ascoli" apre una partita a scacchi contro il computer. Lo scacco qui si chiama ascolo, e vince chi dà ascolo matto.
+Il pulsante "Ascoli" apre una partita a scocchi contro il computer: sono gli scacchi con le cocchie, e si giocano sulla scocchiera. Lo scacco qui si chiama ascolo, e vince chi dà ascolo matto.
 
 | Pezzo | Cocchia |
 |---|---|

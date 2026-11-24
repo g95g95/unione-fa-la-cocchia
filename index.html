@@ -132,7 +132,7 @@ button.primary{background:var(--yolk);color:#1c2410}
 #sl canvas{left:13.3898%;top:43.2768%;width:66.9492%;height:16.0452%}
 @media (prefers-reduced-motion:reduce){.tk{transition:none}}
 
-/* Ascoli: gli scacchi delle cocchie, a tutto schermo sopra il gioco */
+/* Ascoli: gli scocchi delle cocchie, a tutto schermo sopra il gioco */
 .asc{position:fixed;inset:0;z-index:16;display:none;background:var(--olive)}
 .asc.on{display:block}
 .ascin{height:100%;max-width:520px;margin:0 auto;padding:10px 16px 12px;display:flex;flex-direction:column;gap:8px}
@@ -250,13 +250,13 @@ button.primary{background:var(--yolk);color:#1c2410}
 <div id="asc" class="asc" role="dialog" aria-modal="true" aria-labelledby="ascTitle">
   <div class="ascin">
     <header class="aschd">
-      <div><div class="brand">L'unione fa la cocchia</div><h2 id="ascTitle">Ascoli</h2><div class="ascsub" id="ascSub">Gli scacchi delle cocchie</div></div>
+      <div><div class="brand">L'unione fa la cocchia</div><h2 id="ascTitle">Ascoli</h2><div class="ascsub" id="ascSub">Gli scocchi delle cocchie</div></div>
       <button id="ascX" type="button" aria-label="Esci da Ascoli e torna alle cocchie">Esci</button>
     </header>
     <div id="ascSet">
       <div class="card">
         <h2>Tu contro il computer</h2>
-        <p style="margin-top:8px">Sono gli scacchi, ma con le cocchie. Lo scacco qui si chiama ascolo: vince chi dà ascolo matto alla Cocchia d'oro dell'altro.</p>
+        <p style="margin-top:8px">Sono gli scocchi, cioè gli scacchi con le cocchie, sulla scocchiera. Lo scacco qui si chiama ascolo: vince chi dà ascolo matto alla Cocchia d'oro dell'altro.</p>
         <ul class="ascpcs" id="ascPcs"></ul>
         <h3>Livello</h3>
         <div class="asclv" id="ascLv"></div>
@@ -271,7 +271,7 @@ button.primary{background:var(--yolk);color:#1c2410}
     <div id="ascPlay">
       <div class="asccap" id="ascCapTop" aria-label="Le tue cocchie mangiate dal computer"></div>
       <div class="ascbox" id="ascBox">
-        <canvas id="ascBoard" aria-label="Scacchiera di Ascoli"></canvas>
+        <canvas id="ascBoard" aria-label="Scocchiera di Ascoli"></canvas>
         <div id="ascEnd" class="ovl" role="dialog" aria-labelledby="ascEndT">
           <div class="card">
             <h2 id="ascEndT">Ascolo matto!</h2>
@@ -1178,7 +1178,7 @@ function frame(ts){
   fx(dt);draw(dt);requestAnimationFrame(frame);
 }
 /* ---------- Ascoli: il motore ----------
-   Scacchiera 0x88 (casa = traversa*16 + colonna, traversa 0 = la prima del bianco). Pezzi 1..6 = pedone, cavallo, alfiere, torre, regina, re;
+   Scocchiera 0x88 (casa = traversa*16 + colonna, traversa 0 = la prima del bianco). Pezzi 1..6 = pedone, cavallo, alfiere, torre, regina, re;
    il nero ha in piu' il bit 8. Una mossa e' un intero: da | a<<7 | promozione<<14 | segni<<17 (1 en passant, 2 arrocco, 4 pedone di due).
    La ricerca e' un alfa-beta classico con approfondimento iterativo, quiescenza sulle catture e una tabella delle posizioni gia' viste.
    Gira dentro un Web Worker, cosi' mentre pensa la pagina non si blocca. */
@@ -1428,7 +1428,7 @@ function pieceSprite(t,dark,angry,px){
 }
 function pieceInto(cv,t,dark,angry){var g=cv.getContext("2d"),h=cv.width/2;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.translate(h,h+h*.06);g.scale(h/1.62,h/1.62);paintPiece(g,t,dark,angry);}
 
-/* ---------- scacchiera ---------- */
+/* ---------- scocchiera ---------- */
 var aCv=$("ascBoard"),aG=aCv.getContext("2d"),aS=40,aFlip=false;
 function aResize(){
   var box=$("ascBox"),w=box.clientWidth-14,h=box.clientHeight-14,sz=Math.floor(Math.min(w,h)/8)*8;if(sz<=0)return;
@@ -1525,7 +1525,7 @@ function aThinkStart(){
 }
 function aCancel(){aTok++;if(aThink&&aWorker){try{aWorker.terminate();}catch(e){}aWorker=null;}aThink=false;}
 
-/* ---------- tocchi sulla scacchiera ---------- */
+/* ---------- tocchi sulla scocchiera ---------- */
 function aSqAt(e){var rc=aCv.getBoundingClientRect(),fx=Math.floor((e.clientX-rc.left)/rc.width*8),fy=Math.floor((e.clientY-rc.top)/rc.height*8);
   if(fx<0||fx>7||fy<0||fy>7)return-1;return(aFlip?fy:7-fy)*16+(aFlip?7-fx:fx);}
 function aCanPlay(){return aLive&&!aOver&&!aThink&&!aPromo&&AC.side()===aMe;}
@@ -1571,7 +1571,7 @@ function aLoad(){
     aLive=!AC.legal().length?false:true;}
 }
 function aShowSet(){
-  aCancel();$("ascPlay").classList.remove("on");$("ascSet").classList.add("on");$("ascSub").textContent="Gli scacchi delle cocchie";aMarkSet();
+  aCancel();$("ascPlay").classList.remove("on");$("ascSet").classList.add("on");$("ascSub").textContent="Gli scocchi delle cocchie";aMarkSet();
   try{$("ascGo").focus({preventScroll:true});}catch(e){}$("ascSet").scrollTop=0;
 }
 function aMarkSet(){
