@@ -119,6 +119,16 @@ Il pulsante "Ascoli" apre una partita a scacchi contro il computer. Lo scacco qu
 
 L'ordine è stato controllato facendo giocare il computer contro sé stesso, ogni livello contro quello dopo. Il livello più alto vince quasi sempre; l'unica coppia vicina è 6 contro 7, dove il 7 vince circa due partite su tre (10 vinte, 5 perse, 1 patta). Dal livello 8 in su le partite sono state poche, perché sono lente.
 
+## Lingue
+
+Il gioco parla sei lingue: italiano, inglese, francese, tedesco, spagnolo e russo. La pillola col mappamondo accanto al record (con la sigla della lingua, per esempio `IT`) apre la scelta; si può cambiare anche a partita in corso.
+
+- La prima volta il gioco usa la lingua del browser; se non è tra le sei, l'inglese. La scelta poi resta salvata nel browser.
+- Con `?lang=en` (o `fr`, `de`, `es`, `ru`, `it`) nell'indirizzo si apre direttamente in quella lingua.
+- Restano uguali in tutte le lingue i nomi propri del gioco: L'unione fa la cocchia, Open Cocchia, Ascoli, Slop-Machine. "Cocchia" resta com'è (in russo коккья); lo scacco di Ascoli resta "ascolo".
+- Sul biglietto e sulla Slop-Machine le scritte stampate nell'immagine si coprono con quelle tradotte, e la legenda in fondo al biglietto si ridisegna coi nomi giusti. Resta solo il titolo "Cocchie d'oro".
+- Tutti i testi sono in `index.html`, nell'oggetto `I18N`: per ogni lingua i testi fissi (legati agli elementi con `data-t` e `data-ta`) e le frasi che cambiano, scritte come funzioni perché articoli, generi e casi non si traducono parola per parola.
+
 ## L'app: Open Cocchia
 
 Il gioco si può installare sul telefono come app, con il nome Open Cocchia e la Cocchia d'oro grattata per metà come icona. Una volta installato si apre a tutto schermo e funziona anche senza rete.
@@ -149,4 +159,4 @@ Nella finestra "Cocchie" il link "Contatta gli sviluppatori" apre in una nuova s
 
 ## Com'è fatto
 
-Il gioco è tutto in `index.html`: nessuna installazione e nessun server (a parte il contatore di GoatCounter). Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti, cocchie vinte, set di cocchie scelto e partita di Ascoli restano nel browser di chi gioca. Il computer di Ascoli pensa in un Web Worker, così la pagina non si blocca mentre cerca la mossa.
+Il gioco è tutto in `index.html`: nessuna installazione e nessun server (a parte il contatore di GoatCounter). Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti, cocchie vinte, set di cocchie scelto, lingua e partita di Ascoli restano nel browser di chi gioca. Il computer di Ascoli pensa in un Web Worker, così la pagina non si blocca mentre cerca la mossa.
