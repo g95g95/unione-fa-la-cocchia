@@ -128,10 +128,25 @@ Dove l'app si può installare, sopra i comandi compare il pulsante giallo "Insta
 - Android (Chrome): tocca il pulsante e conferma. In alternativa menu ⋮ e "Installa app" (o "Aggiungi a schermata Home").
 - iPhone (Safari): lì l'installazione passa per forza da Condividi, quindi il pulsante mostra solo la strada: Condividi, poi "Aggiungi alla schermata Home".
 
+## Condividere il risultato
+
+A fine partita "Copia risultato" copia il punteggio con sotto il link al gioco, pronto da incollare su WhatsApp:
+
+```
+L'unione fa la cocchia, livello 3 (Tinozza): 15230 punti. Ho vinto la Cocchia nocciola.
+https://g95g95.github.io/unione-fa-la-cocchia/
+```
+
+## Statistiche
+
+Le visite si contano con [GoatCounter](https://www.goatcounter.com), senza cookie e senza dati personali. Oltre alle visite il gioco manda tre eventi: `partita-finita` (ogni partita arrivata alla fine, vinta o persa), `livello-N-vinto` e `risultato-copiato`. Il conteggio non parte in anteprima, da file locale né da `localhost`; senza rete semplicemente non conta.
+
+Il codice del sito è `unionefalacocchia`, scritto in `index.html` nella variabile `GC`: i numeri si vedono su https://unionefalacocchia.goatcounter.com dopo aver registrato il sito con quel codice.
+
 ## Contatti
 
 Nella finestra "Cocchie" il link "Contatta gli sviluppatori" apre in una nuova scheda un Google Form. Serve la rete. Le risposte arrivano nel modulo, senza nessun server del gioco.
 
 ## Com'è fatto
 
-Il gioco è tutto in `index.html`: nessuna installazione e nessun server. Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti, cocchie vinte, set di cocchie scelto e partita di Ascoli restano nel browser di chi gioca. Il computer di Ascoli pensa in un Web Worker, così la pagina non si blocca mentre cerca la mossa.
+Il gioco è tutto in `index.html`: nessuna installazione e nessun server (a parte il contatore di GoatCounter). Accanto ci sono solo i file che servono all'app: `manifest.webmanifest` (nome, colori, icone), `sw.js` (la copia per quando manca la rete) e la cartella `icons`. Record, partita in corso, livelli aperti, cocchie vinte, set di cocchie scelto e partita di Ascoli restano nel browser di chi gioca. Il computer di Ascoli pensa in un Web Worker, così la pagina non si blocca mentre cerca la mossa.

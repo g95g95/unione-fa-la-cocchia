@@ -777,6 +777,7 @@ function doMerge(a,b){
 }
 function endGame(win){
   if(over)return;over=true;aiming=false;won=!!win;
+  track("partita-finita");if(won)track("livello-"+level+"-vinto");
   var rec=score>best;if(rec)best=score;
   var more=win&&level<LV.length;
   if(win){if(done.indexOf(level)<0)done.push(level);if(more&&unlocked<level+1)unlocked=level+1;}
@@ -848,7 +849,8 @@ function setSkin(k){if((k?1:0)===skin)return;useSkin(k);skinUI();buildLegend();b
 $("skA").addEventListener("click",function(){setSkin(0);});
 $("skI").addEventListener("click",function(){setSkin(1);});
 $("copy").addEventListener("click",function(){
-  var bt=this,txt="L'unione fa la cocchia, livello "+level+" ("+LV[level-1].n+"): "+score+" punti. "+(won?"Ho vinto la "+rewName(level)+".":"Sono arrivato a "+NAMES[maxTier]+" ("+(maxTier+1)+" di "+RAD.length+").");
+  var bt=this,txt="L'unione fa la cocchia, livello "+level+" ("+LV[level-1].n+"): "+score+" punti. "+(won?"Ho vinto la "+rewName(level)+".":"Sono arrivato a "+NAMES[maxTier]+" ("+(maxTier+1)+" di "+RAD.length+").")+"\n"+SITE;
+  track("risultato-copiato");
   try{navigator.clipboard.writeText(txt).then(function(){bt.textContent="Copiato";},function(){bt.textContent="Copia non riuscita";});}catch(e){bt.textContent="Copia non riuscita";}
 });
 /* ---------- livelli: scelta e premi ---------- */
@@ -1655,6 +1657,11 @@ function start(hotData){
 var hot=window.claude&&window.claude.hot;
 if(hot&&hot.snapshot)try{hot.snapshot(function(){var s=serialize();s.best=best;return s;});}catch(e){}
 if(hot&&hot.ready)hot.ready(start);else start((hot&&hot.data)||{});
+/* statistiche: GoatCounter conta le visite e, come eventi, le partite finite, i livelli vinti e i risultati copiati.
+   Niente cookie e niente dati personali. Non parte in anteprima ne' da file locale; senza rete semplicemente non conta. */
+var SITE="https://g95g95.github.io/unione-fa-la-cocchia/",GC="https://unionefalacocchia.goatcounter.com/count";
+function track(p){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:p,title:p,event:true});}catch(e){}}
+if(!hot&&/^https?:$/.test(location.protocol)){var gcs=document.createElement("script");gcs.async=true;gcs.src="https://gc.zgo.at/count.js";gcs.setAttribute("data-goatcounter",GC);document.head.appendChild(gcs);}
 /* il service worker tiene una copia del gioco per quando manca la rete */
 if(!hot&&"serviceWorker" in navigator&&/^https?:$/.test(location.protocol))window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
 /* pulsante Installa: compare solo dove l'app si puo' installare e non lo e' gia'.
