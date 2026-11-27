@@ -153,6 +153,12 @@ Le visite si contano con [GoatCounter](https://www.goatcounter.com), senza cooki
 
 Il codice del sito è `unionefalacocchia`, scritto in `index.html` nella variabile `GC`: i numeri si vedono su https://unionefalacocchia.goatcounter.com dopo aver registrato il sito con quel codice.
 
+## Aggiornamenti e salvataggi
+
+- Record, livelli, cocchie vinte, set di cocchie e partita di Ascoli stanno nel localStorage del browser, non nella copia per l'uso senza rete. Aggiornare il gioco, ricaricarlo o svuotare la cache ("immagini e file") non li tocca. Li cancella solo chi cancella i dati del sito ("cookie e dati dei siti", "Cancella dati" dell'app) o, su iPhone, chi toglie l'app dalla schermata Home.
+- Il gioco controlla da solo se è uscita una versione nuova: all'apertura, quando si torna al gioco dallo sfondo e ogni mezz'ora, chiede al sito solo la data dell'ultima pubblicazione (pochi byte). Se ce n'è una nuova la scarica e si ricarica da solo quando si torna al gioco, o se nessuno l'ha ancora toccato; altrimenti compare il pulsante giallo "Nuova versione pronta". Non serve aggiornare a mano né svuotare la cache, e non c'è nessun numero di versione da cambiare quando si pubblica.
+- Questo vale da questa versione in poi. Chi ha ancora una versione di prima (senza il controllo) la tiene finché la pagina non si ricarica davvero: basta chiudere l'app, togliendola anche dalle app recenti, e riaprirla. Con la rete lenta può servire farlo due volte.
+
 ## Contatti
 
 Nella finestra "Cocchie" il link "Contatta gli sviluppatori" apre in una nuova scheda un Google Form. Serve la rete. Le risposte arrivano nel modulo, senza nessun server del gioco.

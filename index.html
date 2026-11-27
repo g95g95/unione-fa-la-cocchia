@@ -142,7 +142,7 @@ button.primary{background:var(--yolk);color:#1c2410}
 #sl canvas{left:13.3898%;top:43.2768%;width:66.9492%;height:16.0452%}
 @media (prefers-reduced-motion:reduce){.tk{transition:none}}
 
-/* Ascoli: gli scacchi delle cocchie, a tutto schermo sopra il gioco */
+/* Ascoli: gli scocchi delle cocchie, a tutto schermo sopra il gioco */
 .asc{position:fixed;inset:0;z-index:16;display:none;background:var(--olive)}
 .asc.on{display:block}
 .ascin{height:100%;max-width:520px;margin:0 auto;padding:10px 16px 12px;display:flex;flex-direction:column;gap:8px}
@@ -224,6 +224,10 @@ button.primary{background:var(--yolk);color:#1c2410}
 
   <div class="ladder" id="ladder" aria-label="Scala delle cocchie, dalla più piccola alla più grande" data-ta="aria-label:ladder"></div>
 
+  <div class="inst" id="upd">
+    <button id="updBtn" type="button" class="primary" data-t="upd">Nuova versione pronta: tocca per aggiornare</button>
+  </div>
+
   <div class="inst" id="inst">
     <button id="instBtn" type="button" class="primary" data-t="install">Installa Open Cocchia</button>
     <button id="instX" type="button" aria-label="Nascondi il pulsante di installazione" data-ta="aria-label:instX">×</button>
@@ -268,13 +272,13 @@ button.primary{background:var(--yolk);color:#1c2410}
 <div id="asc" class="asc" role="dialog" aria-modal="true" aria-labelledby="ascTitle">
   <div class="ascin">
     <header class="aschd">
-      <div><div class="brand">L'unione fa la cocchia</div><h2 id="ascTitle" data-t="ascTitle">Ascoli</h2><div class="ascsub" id="ascSub">Gli scacchi delle cocchie</div></div>
+      <div><div class="brand">L'unione fa la cocchia</div><h2 id="ascTitle" data-t="ascTitle">Ascoli</h2><div class="ascsub" id="ascSub">Gli scocchi delle cocchie</div></div>
       <button id="ascX" type="button" aria-label="Esci da Ascoli e torna alle cocchie" data-ta="aria-label:ascXAria" data-t="ascX">Esci</button>
     </header>
     <div id="ascSet">
       <div class="card">
         <h2 data-t="ascVs">Tu contro il computer</h2>
-        <p style="margin-top:8px" data-t="ascIntro">Sono gli scacchi, ma con le cocchie. Lo scacco qui si chiama ascolo: vince chi dà ascolo matto alla Cocchia d'oro dell'altro.</p>
+        <p style="margin-top:8px" data-t="ascIntro">Sono gli scocchi, cioè gli scacchi con le cocchie, sulla scocchiera. Lo scacco qui si chiama ascolo: vince chi dà ascolo matto alla Cocchia d'oro dell'altro.</p>
         <ul class="ascpcs" id="ascPcs"></ul>
         <h3 data-t="level">Livello</h3>
         <div class="asclv" id="ascLv"></div>
@@ -289,7 +293,7 @@ button.primary{background:var(--yolk);color:#1c2410}
     <div id="ascPlay">
       <div class="asccap" id="ascCapTop" aria-label="Le tue cocchie mangiate dal computer" data-ta="aria-label:capTop"></div>
       <div class="ascbox" id="ascBox">
-        <canvas id="ascBoard" aria-label="Scacchiera di Ascoli" data-ta="aria-label:board"></canvas>
+        <canvas id="ascBoard" aria-label="Scocchiera di Ascoli" data-ta="aria-label:board"></canvas>
         <div id="ascEnd" class="ovl" role="dialog" aria-labelledby="ascEndT">
           <div class="card">
             <h2 id="ascEndT">Ascolo matto!</h2>
@@ -353,15 +357,15 @@ it:{
  best:"Record",next:"Poi tocca a",jar:"Cocchiodromo",copy:"Copia risultato",copied:"Copiato",copyFail:"Copia non riuscita",again:"Rigioca",
  skAria:"Quali cocchie",skA:"Animate",skI:"Inanimate",contact:"Contatta gli sviluppatori",back:"Torna a giocare",
  dim4:"4ª dimensione",dim4Aria:"Quarta dimensione",ladder:"Scala delle cocchie, dalla più piccola alla più grande",
- install:"Installa Open Cocchia",instX:"Nascondi il pulsante di installazione",
+ install:"Installa Open Cocchia",instX:"Nascondi il pulsante di installazione",upd:"Nuova versione pronta: tocca per aggiornare",
  shake:"Scossa",soundOn:"Audio sì",soundOff:"Audio no",list:"Cocchie",lvl:"Livelli",asco:"Ascoli",newG:"Nuova",sure:"Sicuro?",
  levelsT:"I cocchiodromi",levelsP:"Fai la Cocchia d'oro per vincere la cocchia del livello e aprire quello dopo.",close:"Chiudi",play:"Gioca",restartLv:"Ricomincia",
  instHow:"Tocca Condividi, il quadrato con la freccia verso l'alto, poi scegli «Aggiungi alla schermata Home».",gotIt:"Ho capito",
  language:"Lingua",
- ascTitle:"Ascoli",ascSub:"Gli scacchi delle cocchie",ascX:"Esci",ascXAria:"Esci da Ascoli e torna alle cocchie",ascVs:"Tu contro il computer",
- ascIntro:"Sono gli scacchi, ma con le cocchie. Lo scacco qui si chiama ascolo: vince chi dà ascolo matto alla Cocchia d'oro dell'altro.",
+ ascTitle:"Ascoli",ascSub:"Gli scocchi delle cocchie",ascX:"Esci",ascXAria:"Esci da Ascoli e torna alle cocchie",ascVs:"Tu contro il computer",
+ ascIntro:"Sono gli scocchi, cioè gli scacchi con le cocchie, sulla scocchiera. Lo scacco qui si chiama ascolo: vince chi dà ascolo matto alla Cocchia d'oro dell'altro.",
  level:"Livello",playWith:"Giochi con",meAria:"Con che colore giochi",meL:"Le chiare, muovi tu",meD:"Le scure",
- capTop:"Le tue cocchie mangiate dal computer",capBot:"Le cocchie che hai mangiato",board:"Scacchiera di Ascoli",
+ capTop:"Le tue cocchie mangiate dal computer",capBot:"Le cocchie che hai mangiato",board:"Scocchiera di Ascoli",
  look:"Guarda",rematch:"Rivincita",promoT:"Il pistacchio diventa…",cancel:"Annulla",undo:"Annulla mossa",newMatch:"Nuova partita",resign:"Abbandoni?",
  tkAlt:"Biglietto Cocchie d'oro: gratta 6 caselle, trova 3 cocchie uguali e vinci",tkTop:"Caselle da grattare",
  slAlt:"Slop-Machine: 3 cocchie uguali danno una scossa",slReel:"Rulli della Slop-Machine",tkScratch:"Gratta le 6 caselle col dito",tkAll:"Gratta tutto",
@@ -421,7 +425,7 @@ en:{
  best:"Best",next:"Next up",jar:"Cocchiodrome",copy:"Copy result",copied:"Copied",copyFail:"Couldn't copy",again:"Play again",
  skAria:"Which cocchie",skA:"Animate",skI:"Inanimate",contact:"Contact the developers",back:"Back to the game",
  dim4:"4th dimension",dim4Aria:"Fourth dimension",ladder:"Cocchia ladder, from the smallest to the biggest",
- install:"Install Open Cocchia",instX:"Hide the install button",
+ install:"Install Open Cocchia",instX:"Hide the install button",upd:"New version ready: tap to update",
  shake:"Shake",soundOn:"Sound on",soundOff:"Sound off",list:"Cocchie",lvl:"Levels",asco:"Ascoli",newG:"New",sure:"Sure?",
  levelsT:"The cocchiodromes",levelsP:"Make the Golden Cocchia to win the level's cocchia and unlock the next one.",close:"Close",play:"Play",restartLv:"Restart",
  instHow:"Tap Share, the square with the arrow pointing up, then choose “Add to Home Screen”.",gotIt:"Got it",
@@ -486,7 +490,7 @@ fr:{
  best:"Record",next:"Ensuite",jar:"Cocchiodrome",copy:"Copier le score",copied:"Copié",copyFail:"Copie impossible",again:"Rejouer",
  skAria:"Quelles cocchie",skA:"Animées",skI:"Inanimées",contact:"Contacter les développeurs",back:"Retour au jeu",
  dim4:"4e dimension",dim4Aria:"Quatrième dimension",ladder:"Échelle des cocchie, de la plus petite à la plus grosse",
- install:"Installer Open Cocchia",instX:"Masquer le bouton d'installation",
+ install:"Installer Open Cocchia",instX:"Masquer le bouton d'installation",upd:"Nouvelle version prête : touchez pour mettre à jour",
  shake:"Secoue",soundOn:"Son oui",soundOff:"Son non",list:"Cocchie",lvl:"Niveaux",asco:"Ascoli",newG:"Nouvelle",sure:"Sûr ?",
  levelsT:"Les cocchiodromes",levelsP:"Fais la Cocchia d'or pour gagner la cocchia du niveau et débloquer le suivant.",close:"Fermer",play:"Jouer",restartLv:"Recommencer",
  instHow:"Touche Partager, le carré avec la flèche vers le haut, puis choisis « Sur l'écran d'accueil ».",gotIt:"Compris",
@@ -552,7 +556,7 @@ de:{
  best:"Rekord",next:"Als Nächstes",jar:"Cocchiodrom",copy:"Ergebnis kopieren",copied:"Kopiert",copyFail:"Kopieren fehlgeschlagen",again:"Nochmal",
  skAria:"Welche Cocchie",skA:"Belebt",skI:"Unbelebt",contact:"Entwickler kontaktieren",back:"Zurück zum Spiel",
  dim4:"4. Dimension",dim4Aria:"Vierte Dimension",ladder:"Leiter der Cocchie, von der kleinsten bis zur größten",
- install:"Open Cocchia installieren",instX:"Installationsknopf ausblenden",
+ install:"Open Cocchia installieren",instX:"Installationsknopf ausblenden",upd:"Neue Version bereit: zum Aktualisieren tippen",
  shake:"Ruck",soundOn:"Ton an",soundOff:"Ton aus",list:"Cocchie",lvl:"Level",asco:"Ascoli",newG:"Neu",sure:"Sicher?",
  levelsT:"Die Cocchiodrome",levelsP:"Mach die Goldene Cocchia, um die Cocchia des Levels zu gewinnen und das nächste freizuschalten.",close:"Schließen",play:"Spielen",restartLv:"Neustart",
  instHow:"Tippe auf Teilen, das Quadrat mit dem Pfeil nach oben, und wähle dann „Zum Home-Bildschirm“.",gotIt:"Verstanden",
@@ -620,7 +624,7 @@ es:{
  best:"Récord",next:"Después",jar:"Cocchiódromo",copy:"Copiar resultado",copied:"Copiado",copyFail:"No se pudo copiar",again:"Otra vez",
  skAria:"Qué cocchie",skA:"Animadas",skI:"Inanimadas",contact:"Contactar con los desarrolladores",back:"Volver al juego",
  dim4:"4.ª dimensión",dim4Aria:"Cuarta dimensión",ladder:"Escala de las cocchie, de la más pequeña a la más grande",
- install:"Instalar Open Cocchia",instX:"Ocultar el botón de instalación",
+ install:"Instalar Open Cocchia",instX:"Ocultar el botón de instalación",upd:"Nueva versión lista: toca para actualizar",
  shake:"Sacudir",soundOn:"Audio sí",soundOff:"Audio no",list:"Cocchie",lvl:"Niveles",asco:"Ascoli",newG:"Nueva",sure:"¿Seguro?",
  levelsT:"Los cocchiódromos",levelsP:"Haz la Cocchia de oro para ganar la cocchia del nivel y abrir el siguiente.",close:"Cerrar",play:"Jugar",restartLv:"Reiniciar",
  instHow:"Toca Compartir, el cuadrado con la flecha hacia arriba, y elige «Añadir a pantalla de inicio».",gotIt:"Entendido",
@@ -686,7 +690,7 @@ ru:{
  best:"Рекорд",next:"Дальше",jar:"Коккиодром",copy:"Скопировать",copied:"Скопировано",copyFail:"Не удалось",again:"Ещё раз",
  skAria:"Какие коккьи",skA:"Живые",skI:"Неживые",contact:"Написать разработчикам",back:"Вернуться к игре",
  dim4:"4-е измерение",dim4Aria:"Четвёртое измерение",ladder:"Лестница коккий, от самой маленькой до самой большой",
- install:"Установить Open Cocchia",instX:"Скрыть кнопку установки",
+ install:"Установить Open Cocchia",instX:"Скрыть кнопку установки",upd:"Новая версия готова: нажмите, чтобы обновить",
  shake:"Тряска",soundOn:"Звук вкл",soundOff:"Звук выкл",list:"Коккьи",lvl:"Уровни",asco:"Асколи",newG:"Заново",sure:"Точно?",
  levelsT:"Коккиодромы",levelsP:"Собери Золотую коккью, чтобы выиграть коккью уровня и открыть следующий.",close:"Закрыть",play:"Играть",restartLv:"Заново",
  instHow:"Нажми «Поделиться» (квадрат со стрелкой вверх), затем выбери «На экран „Домой“».",gotIt:"Понятно",
@@ -1645,7 +1649,7 @@ function frame(ts){
   fx(dt);draw(dt);requestAnimationFrame(frame);
 }
 /* ---------- Ascoli: il motore ----------
-   Scacchiera 0x88 (casa = traversa*16 + colonna, traversa 0 = la prima del bianco). Pezzi 1..6 = pedone, cavallo, alfiere, torre, regina, re;
+   Scocchiera 0x88 (casa = traversa*16 + colonna, traversa 0 = la prima del bianco). Pezzi 1..6 = pedone, cavallo, alfiere, torre, regina, re;
    il nero ha in piu' il bit 8. Una mossa e' un intero: da | a<<7 | promozione<<14 | segni<<17 (1 en passant, 2 arrocco, 4 pedone di due).
    La ricerca e' un alfa-beta classico con approfondimento iterativo, quiescenza sulle catture e una tabella delle posizioni gia' viste.
    Gira dentro un Web Worker, cosi' mentre pensa la pagina non si blocca. */
@@ -1888,7 +1892,7 @@ function pieceSprite(t,dark,angry,px){
 }
 function pieceInto(cv,t,dark,angry){var g=cv.getContext("2d"),h=cv.width/2;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,cv.width,cv.height);g.translate(h,h+h*.06);g.scale(h/1.62,h/1.62);paintPiece(g,t,dark,angry);}
 
-/* ---------- scacchiera ---------- */
+/* ---------- scocchiera ---------- */
 var aCv=$("ascBoard"),aG=aCv.getContext("2d"),aS=40,aFlip=false;
 function aResize(){
   var box=$("ascBox"),w=box.clientWidth-14,h=box.clientHeight-14,sz=Math.floor(Math.min(w,h)/8)*8;if(sz<=0)return;
@@ -1995,7 +1999,7 @@ function aNames(){
 }
 function aCancel(){aTok++;if(aThink&&aWorker){try{aWorker.terminate();}catch(e){}aWorker=null;}aThink=false;}
 
-/* ---------- tocchi sulla scacchiera ---------- */
+/* ---------- tocchi sulla scocchiera ---------- */
 function aSqAt(e){var rc=aCv.getBoundingClientRect(),fx=Math.floor((e.clientX-rc.left)/rc.width*8),fy=Math.floor((e.clientY-rc.top)/rc.height*8);
   if(fx<0||fx>7||fy<0||fy>7)return-1;return(aFlip?fy:7-fy)*16+(aFlip?7-fx:fx);}
 function aCanPlay(){return aLive&&!aOver&&!aThink&&!aPromo&&AC.side()===aMe;}
@@ -2172,6 +2176,41 @@ function track(p){try{if(window.goatcounter&&window.goatcounter.count)window.goa
 if(!hot&&/^https?:$/.test(location.protocol)){var gcs=document.createElement("script");gcs.async=true;gcs.src="https://gc.zgo.at/count.js";gcs.setAttribute("data-goatcounter",GC);document.head.appendChild(gcs);}
 /* il service worker tiene una copia del gioco per quando manca la rete */
 if(!hot&&"serviceWorker" in navigator&&/^https?:$/.test(location.protocol))window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+/* ---------- aggiornamenti ----------
+   Chi ha il gioco aperto da tempo (app installata che torna dallo sfondo, scheda mai ricaricata, o pagina partita dalla copia salvata
+   perche' la rete era lenta) continuerebbe a usare la versione vecchia. Allora ogni tanto si chiede al sito solo la data dell'ultima
+   pubblicazione (Last-Modified, pochi byte) e la si confronta con quella della pagina in uso (document.lastModified).
+   Se c'e' una versione nuova la si scarica subito nella copia del service worker, poi si ricarica: da solo quando si torna al gioco
+   dallo sfondo o nei primi secondi prima di aver toccato niente, se no col pulsante giallo. Record, livelli, cocchie vinte e partite
+   in corso stanno nel localStorage e restano. Ricaricamento automatico al massimo una volta per versione, cosi' non puo' girare in tondo. */
+(function(){
+  if(hot||!/^https?:$/.test(location.protocol)||!window.fetch)return;
+  var mine=Date.parse(document.lastModified),newer=0,askedAt=0,bornAt=Date.now(),touched=false,TRY="cocchia-agg";
+  function show(){$("upd").classList.add("on");fitControls();}
+  function tried(){try{return sessionStorage.getItem(TRY)===String(newer);}catch(e){return true;}}
+  function apply(auto){
+    if(auto&&(tried()||tkOpen))return;try{sessionStorage.setItem(TRY,String(newer));}catch(e){}
+    save();try{location.reload();}catch(e){}
+  }
+  function found(lm){
+    newer=lm;
+    try{navigator.serviceWorker.getRegistration().then(function(g){if(g)g.update();}).catch(function(){});}catch(e){}
+    /* si aspetta che la pagina nuova sia scaricata tutta (e quindi salvata dal service worker) prima di ricaricare */
+    fetch(location.pathname,{cache:"reload"}).then(function(r){return r.ok?r.text():null;}).catch(function(){}).then(function(){setTimeout(function(){
+      show();if(document.hidden)return;if(!touched&&Date.now()-bornAt<15000)apply(true);},300);});
+  }
+  function check(){
+    if(newer||!mine||document.hidden||Date.now()-askedAt<120000)return;askedAt=Date.now();
+    fetch(location.pathname,{method:"HEAD",cache:"no-store"}).then(function(r){
+      var lm=Date.parse(r.headers.get("last-modified")||"");if(r.ok&&lm&&lm-mine>2000)found(lm);}).catch(function(){});
+  }
+  document.addEventListener("pointerdown",function(){touched=true;},true);
+  document.addEventListener("keydown",function(){touched=true;},true);
+  document.addEventListener("visibilitychange",function(){if(document.hidden)return;if(newer)apply(true);else check();});
+  window.addEventListener("focus",check);
+  $("updBtn").addEventListener("click",function(){apply(false);});
+  setTimeout(check,4000);setInterval(check,30*60000);
+})();
 /* pulsante Installa: compare solo dove l'app si puo' installare e non lo e' gia'.
    Chrome e simili avvisano con beforeinstallprompt e fanno tutto loro; su iPhone si puo' solo spiegare la strada, che passa da Condividi. */
 (function(){
